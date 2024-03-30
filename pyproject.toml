@@ -37,7 +37,7 @@ Issues = "https://github.com/avalentino/s1aux/issues"
 
 
 [tool.setuptools]
-packages = ["s1aux"]
+packages = ["s1aux", "s1aux.parse"]
 
 
 [tool.setuptools.dynamic]
