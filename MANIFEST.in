@@ -1,0 +1,2 @@
+include Makefile .flake8
+include tools/*.py tools/.xsdata.xml
