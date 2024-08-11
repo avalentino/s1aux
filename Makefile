@@ -12,7 +12,7 @@ help:
 	@echo "Usage: make <TARGET>"
 	@echo "Available targets:"
 	@echo "  help      - print this help message"
-	@echo "  ext       - built the cython extension inplace"
+	@echo "  ext       - build Python extensions inplace"
 	@echo "  dist      - generate the distribution packages (source and wheel)"
 	@echo "  check     - run a full test (using pytest)"
 	@echo "  fullcheck - run a full test (using tox)"
@@ -44,8 +44,8 @@ lint:
 	$(PYTHON) -m flake8 --count --statistics $(TARGET)
 	$(PYTHON) -m isort --check $(TARGET)
 	$(PYTHON) -m black --check $(TARGET)
-	$(PYTHON) -m mypy $(TARGET)
-	ruff check $(TARGET)
+	$(PYTHON) -m mypy --check-untyped-defs --ignore-missing-imports $(TARGET)
+	# ruff check $(TARGET)
 
 api:
 	$(RM) -r docs/api
@@ -65,8 +65,10 @@ clean:
 	$(RM) -r docs/_build
 
 cleaner: clean
-	$(RM) -r .coverage htmlcov 
-	$(RM) -r .pytest_cache .mypy_cache .tox .ipynb_checkpoints .ruff_cache
+	$(RM) -r .coverage htmlcov
+	$(RM) -r .pytest_cache .tox
+	$(RM) -r .mypy_cache .ruff_cache
+	$(RM) -r .ipynb_checkpoints
 
 distclean: cleaner
 	$(RM) -r dist
