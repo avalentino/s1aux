@@ -6,15 +6,15 @@ import os
 import sys
 import enum
 import shutil
+import difflib
 import logging
 import pathlib
 import argparse
 import warnings
 import subprocess
-from typing import Optional, TypedDict, Unpack
+from typing import Optional
 from xml.etree import ElementTree as etree  # noqa: N813
 from urllib.parse import urlencode, urlparse
-
 
 import requests
 
@@ -52,16 +52,7 @@ class ELayout(enum.Enum):
         return self.name
 
 
-class QueryParamsType(TypedDict):
-    """Type for query parameters."""
-
-    name: str
-    value: str
-
-
-def query_url(
-    url: str = SAR_MPC_API_URL, **kwargs: Unpack[QueryParamsType]
-) -> str:
+def query_url(url: str = SAR_MPC_API_URL, **kwargs: str) -> str:
     """Build the query for Sentinel-1 auxiliary products."""
     if len(kwargs) > 0:
         return f"{url}?{urlencode(kwargs)}"
@@ -82,7 +73,7 @@ def _download(url: str, outfile: Optional[PathType] = None) -> pathlib.Path:
 
 def download_aux_products(
     datadir: PathType = "data",
-    query_params: QueryParamsType = DEFAULT_QUERY_PARAMS,
+    query_params: dict[str, str] = DEFAULT_QUERY_PARAMS,
 ) -> pathlib.Path:
     """Download a base set of auxiliary products."""
     query = query_url(**query_params)
@@ -100,7 +91,7 @@ def download_aux_products(
     return datadir
 
 
-def _get_spec_version(product_dir: PathType) -> str:
+def _get_spec_version(product_dir: PathType) -> str | None:
     product_dir = pathlib.Path(product_dir)
     try:
         xsdfile = next(product_dir.glob("support/s1-aux-*.xsd"))
@@ -112,10 +103,62 @@ def _get_spec_version(product_dir: PathType) -> str:
     return etree.parse(xsdfile).getroot().attrib.get("version")
 
 
+class _EChange(enum.IntFlag):
+    NOCHANGE = 0
+    LEFT = enum.auto()
+    RIGHT = enum.auto()
+
+
+def _detect_changes(left: str, right: str) -> _EChange:
+    changed = _EChange.NOCHANGE
+    for line in difflib.unified_diff(left.splitlines(), right.splitlines()):
+        if line.startswith("---") or line.startswith("+++"):
+            continue
+
+        c = line[0]
+        if c == "-":
+            changed |= _EChange.LEFT
+        elif c == "+":
+            changed |= _EChange.RIGHT
+
+    return changed
+
+
+def _process_xsd(
+    path: pathlib.Path,
+    target_xsd_dir: pathlib.Path,
+    strict: bool = False,
+) -> None:
+    dst = target_xsd_dir.joinpath(path.name.removeprefix("s1-aux-"))
+    if dst.exists():
+        left_data = path.read_text()
+        right_data = dst.read_text()
+        if left_data != right_data:
+            msg = (
+                f"source ('{path}') and target ('{dst}') files "
+                f"have different content."
+            )
+            if strict:
+                raise FileExistsError(msg)
+
+            change = _detect_changes(left_data, right_data)
+            if change is _EChange.LEFT:
+                warnings.warn(f"{msg} Replace target.", stacklevel=1)
+                shutil.copy(path, dst)
+            elif change is _EChange.RIGHT:
+                warnings.warn(f"{msg} Skip.", stacklevel=1)
+            elif change == (_EChange.LEFT + _EChange.RIGHT):
+                # both files have unique content
+                raise FileExistsError(msg)
+    else:
+        shutil.copy(path, dst)
+
+
 def _make_xds_dir(
     datadir: PathType,
     xsd_dir: PathType = "xsd",
     layout: ELayout = ELayout.NESTED,
+    strict: bool = False,
 ) -> pathlib.Path:
     datadir = pathlib.Path(datadir)
     if not datadir.exists():
@@ -144,15 +187,7 @@ def _make_xds_dir(
         target_xsd_dir.mkdir(parents=True, exist_ok=True)
 
         for path in product_dir.glob("**/*.xsd"):
-            dst = target_xsd_dir.joinpath(path.name.removeprefix("s1-aux-"))
-            if dst.exists():
-                if dst.read_text() != path.read_text():
-                    raise FileExistsError(
-                        f"source ('{path}') and target ('{dst}') files "
-                        f"have different content"
-                    )
-            else:
-                shutil.copy(path, dst)
+            _process_xsd(path, target_xsd_dir, strict)
 
     if count < 1:
         raise FileNotFoundError(f"No XSD files found in {xsd_dir}")
@@ -163,7 +198,7 @@ def _make_xds_dir(
 def make_cmd(
     xsd_dir: PathType,
     config_file: PathType = ".xsdata.xml",
-    package_name: PathType = "s1aux.parse",
+    package_name: str = "s1aux.parse",
 ) -> list[str]:
     """Generate the command for xsdata execution."""
     config_file = pathlib.Path(config_file)
@@ -187,15 +222,15 @@ def make_cmd(
 
 def generate_s1aux_package_core(
     xsd_dir: PathType,
-    package_name: PathType = "s1aux.parse",
+    package_name: str = "s1aux.parse",
     *,
     config_file: PathType = ".xsdata.xml",
     overwrite: bool = False,
     quiet: bool = True,
-) -> pathlib.Path:
+) -> str:
     """Generate the Python package for s1aux using xsdata and input XSDs."""
-    package_name = pathlib.Path(package_name)
-    if package_name.exists() and not overwrite:
+    package_path = pathlib.Path().joinpath(*package_name.split("."))
+    if package_path.exists() and not overwrite:
         raise FileExistsError(package_name)
 
     cmd = make_cmd(xsd_dir, config_file, package_name)
@@ -207,12 +242,12 @@ def generate_s1aux_package_core(
 
 def generate_s1aux_package(
     xsd_dir: PathType,
-    package_name: PathType = "s1aux.parse",
+    package_name: str = "s1aux.parse",
     *,
     config_file: PathType = ".xsdata.xml",
     overwrite: bool = False,
     quiet: bool = True,
-) -> pathlib.Path:
+) -> str:
     """Generate the Python package for s1aux using xsdata and input XSDs."""
     log = logging.getLogger(__name__)
     xsd_dir = pathlib.Path(xsd_dir)
@@ -363,6 +398,13 @@ def get_parser(subparsers=None):
         default=False,
         help="overwrite existing files",
     )
+    parser.add_argument(
+        "-s",
+        "--strict",
+        action="store_true",
+        default=False,
+        help="do not attempt to merge conflicting XSD files and raise error",
+    )
 
     # Positional arguments
     parser.add_argument(
@@ -413,7 +455,9 @@ def main(*argv):
         datadir = download_aux_products(
             args.datadir, query_params=query_params
         )
-        xsd_dir = _make_xds_dir(datadir, args.xsd_dir, layout=args.layout)
+        xsd_dir = _make_xds_dir(
+            datadir, args.xsd_dir, layout=args.layout, strict=args.strict
+        )
         outdir = generate_s1aux_package(
             xsd_dir,
             args.package_name,
