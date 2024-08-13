@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
 
-"""Command line tool for automatic generation of s1a.parse code form XSDs."""
+"""Command line tool for automatic generation of s1aux.parse code form XSDs."""
 
 import os
 import sys
+import enum
 import shutil
 import logging
 import pathlib
+import argparse
+import warnings
 import subprocess
-
 from typing import Optional, TypedDict, Unpack
+from xml.etree import ElementTree as etree  # noqa: N813
 from urllib.parse import urlencode, urlparse
+
 
 import requests
 
@@ -29,9 +33,23 @@ DEFAULT_QUERY_PARAMS = {
     "adf__active": "true",
     # "mode": "extended",
 }
+FULL_QUERY_PARAMS = {
+    "sentinel1__mission": "S1A",
+    # "mode": "extended",
+}
 
 
 PathType = str | os.PathLike[str]
+
+
+class ELayout(enum.Enum):
+    """Layout of the package."""
+
+    FLAT = "flat"
+    NESTED = "nested"
+
+    def __str__(self):
+        return self.name
 
 
 class QueryParamsType(TypedDict):
@@ -62,9 +80,12 @@ def _download(url: str, outfile: Optional[PathType] = None) -> pathlib.Path:
     return outfile
 
 
-def download_aux_products(datadir: PathType = "data") -> pathlib.Path:
+def download_aux_products(
+    datadir: PathType = "data",
+    query_params: QueryParamsType = DEFAULT_QUERY_PARAMS,
+) -> pathlib.Path:
     """Download a base set of auxiliary products."""
-    query = query_url(**DEFAULT_QUERY_PARAMS)
+    query = query_url(**query_params)
     response = requests.get(query)
     response.raise_for_status()
 
@@ -79,35 +100,70 @@ def download_aux_products(datadir: PathType = "data") -> pathlib.Path:
     return datadir
 
 
+def _get_spec_version(product_dir: PathType) -> str:
+    product_dir = pathlib.Path(product_dir)
+    try:
+        xsdfile = next(product_dir.glob("support/s1-aux-*.xsd"))
+    except StopAsyncIteration:
+        raise FileNotFoundError(
+            "No AUX XSD found in '{product_dir}'"
+        ) from None
+
+    return etree.parse(xsdfile).getroot().attrib.get("version")
+
+
 def _make_xds_dir(
-    datadir: PathType, xsd_dir: PathType = "xsd"
+    datadir: PathType,
+    xsd_dir: PathType = "xsd",
+    layout: ELayout = ELayout.NESTED,
 ) -> pathlib.Path:
     datadir = pathlib.Path(datadir)
     if not datadir.exists():
         raise FileNotFoundError(str(datadir))
 
-    xsd_files = list(datadir.glob("**/*.xsd"))
-    if len(xsd_files) == 0:
-        raise FileNotFoundError(f"No XSD files found in {xsd_dir}")
-
     xsd_dir = pathlib.Path(xsd_dir)
-    xsd_dir.mkdir(parents=True)
-    for path in xsd_files:
-        dst = xsd_dir.joinpath(path.name.removeprefix("s1-aux-"))
-        if dst.exists():
-            if dst.read_text() != path.read_text():
-                raise FileExistsError(
-                    f"source ('{path}') and target ('{dst}') files "
-                    f"have different content"
-                )
+
+    count = 0
+    for product_dir in datadir.glob("S1?_AUX_*.SAFE"):
+        spec_version = _get_spec_version(product_dir)
+        if spec_version is None:
+            warnings.warn(
+                f"Unable to retrieve the specification version for "
+                f"'{product_dir.name}', skip.",
+                stacklevel=1,
+            )
+            continue
+
+        count += 1
+
+        if layout is ELayout.NESTED:
+            target_xsd_dir = xsd_dir / f"v{spec_version}"
         else:
-            shutil.copy(path, dst)
+            target_xsd_dir = xsd_dir
+
+        target_xsd_dir.mkdir(parents=True, exist_ok=True)
+
+        for path in product_dir.glob("**/*.xsd"):
+            dst = target_xsd_dir.joinpath(path.name.removeprefix("s1-aux-"))
+            if dst.exists():
+                if dst.read_text() != path.read_text():
+                    raise FileExistsError(
+                        f"source ('{path}') and target ('{dst}') files "
+                        f"have different content"
+                    )
+            else:
+                shutil.copy(path, dst)
+
+    if count < 1:
+        raise FileNotFoundError(f"No XSD files found in {xsd_dir}")
 
     return xsd_dir
 
 
 def make_cmd(
-    xsd_dir: PathType, config_file: PathType = ".xsdata.xml"
+    xsd_dir: PathType,
+    config_file: PathType = ".xsdata.xml",
+    package_name: PathType = "s1aux.parse",
 ) -> list[str]:
     """Generate the command for xsdata execution."""
     config_file = pathlib.Path(config_file)
@@ -123,44 +179,248 @@ def make_cmd(
             "-ss filenames"
         ).split()
         cmd.extend(default_cmd_args)
-    cmd.extend(["-p", "s1aux.parse"])
+    cmd.extend(["-p", package_name])
     cmd.append(os.fspath(xsd_dir))
 
     return cmd
 
 
-def generate_s1aux_package(
+def generate_s1aux_package_core(
     xsd_dir: PathType,
-    outdir: PathType = "s1aux",
+    package_name: PathType = "s1aux.parse",
     *,
     config_file: PathType = ".xsdata.xml",
     overwrite: bool = False,
     quiet: bool = True,
 ) -> pathlib.Path:
     """Generate the Python package for s1aux using xsdata and input XSDs."""
-    outdir = pathlib.Path(outdir)
-    if outdir.exists() and not overwrite:
-        raise FileExistsError(outdir)
+    package_name = pathlib.Path(package_name)
+    if package_name.exists() and not overwrite:
+        raise FileExistsError(package_name)
 
-    cmd = make_cmd(xsd_dir, config_file)
+    cmd = make_cmd(xsd_dir, config_file, package_name)
 
     subprocess.run(cmd, check=True, capture_output=quiet)
 
-    return outdir
+    return package_name
 
 
-def main():
+def generate_s1aux_package(
+    xsd_dir: PathType,
+    package_name: PathType = "s1aux.parse",
+    *,
+    config_file: PathType = ".xsdata.xml",
+    overwrite: bool = False,
+    quiet: bool = True,
+) -> pathlib.Path:
+    """Generate the Python package for s1aux using xsdata and input XSDs."""
+    log = logging.getLogger(__name__)
+    xsd_dir = pathlib.Path(xsd_dir)
+
+    if len(list(xsd_dir.glob("*.xsd"))) > 0:
+        layout = ELayout.FLAT
+    else:
+        layout = ELayout.NESTED
+    log.info("layout: %s", layout)
+
+    if layout is ELayout.FLAT:
+        return generate_s1aux_package_core(
+            xsd_dir,
+            package_name,
+            config_file=config_file,
+            overwrite=overwrite,
+            quiet=quiet,
+        )
+    else:
+        for versioned_xsd_dir in xsd_dir.glob("v[0-9].*"):
+            log.info("versioned_xsd_dir: %s", versioned_xsd_dir)
+
+            normalized_version = versioned_xsd_dir.name.replace(".", "_")
+            versioned_package_name = f"{package_name}.{normalized_version}"
+            log.info("package_name: %s", versioned_package_name)
+
+            generate_s1aux_package_core(
+                versioned_xsd_dir,
+                versioned_package_name,
+                config_file=config_file,
+                overwrite=overwrite,
+                quiet=quiet,
+            )
+        return package_name
+
+
+__version__ = "1.0"
+PROG = pathlib.Path(__file__).stem
+LOGFMT = "%(asctime)s %(levelname)-8s -- %(message)s"
+DEFAULT_LOGLEVEL = "WARNING"
+
+
+def _autocomplete(parser):
+    try:
+        import argcomplete
+    except ImportError:
+        pass
+    else:
+        argcomplete.autocomplete(parser)
+
+
+def _add_logging_control_args(parser, default_loglevel=DEFAULT_LOGLEVEL):
+    """Add command line options for logging control."""
+    loglevels = [logging.getLevelName(level) for level in range(10, 60, 10)]
+
+    parser.add_argument(
+        "--loglevel",
+        default=default_loglevel,
+        choices=loglevels,
+        help="logging level (default: %(default)s)",
+    )
+    parser.add_argument(
+        "-q",
+        "--quiet",
+        dest="loglevel",
+        action="store_const",
+        const="ERROR",
+        help="suppress standard output messages, "
+        "only errors are printed to screen",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        dest="loglevel",
+        action="store_const",
+        const="INFO",
+        help="print verbose output messages",
+    )
+    parser.add_argument(
+        "-d",
+        "--debug",
+        dest="loglevel",
+        action="store_const",
+        const="DEBUG",
+        help="print debug messages",
+    )
+
+
+def get_parser(subparsers=None):
+    """Instantiate the command line argument (sub-)parser."""
+    name = PROG  # or 'subcommand-name'
+    synopsis = __doc__.splitlines()[0]
+
+    doc = __doc__
+
+    if subparsers is None:
+        parser = argparse.ArgumentParser(prog=name, description=doc)
+        parser.add_argument(
+            "--version", action="version", version="%(prog)s v" + __version__
+        )
+    else:
+        parser = subparsers.add_parser(name, description=doc, help=synopsis)
+        # parser.set_defaults(func=info)
+
+    _add_logging_control_args(parser)
+
+    # Command line options
+    parser.add_argument(
+        "--datadir",
+        default="data",
+        help=(
+            "path to the directory where AUX data are downloaded "
+            "(default: '%(default)s')"
+        ),
+    )
+    parser.add_argument(
+        "-x",
+        "--xsd-dir",
+        default="xsd",
+        help=(
+            "path to the direcotory where XSD files are stored "
+            "(default: '%(default)s')"
+        ),
+    )
+    parser.add_argument(
+        "-l",
+        "--layout",
+        choices=ELayout,
+        type=ELayout.__getitem__,
+        default=ELayout.NESTED,
+        help=(
+            "layout for the generated package: "
+            "FLAT puts all the denerated modules in the target package, "
+            "NESTED creates a sub-packages hyerarchy according to the "
+            "format specification version. Default: '%(default)s'"
+        ),
+    )
+    parser.add_argument(
+        "-c",
+        "--config-file",
+        default=".xsdata.xml",
+        help="path to the xsdata configuration file (default: '%(default)s')",
+    )
+    parser.add_argument(
+        "-f",
+        "--force",
+        action="store_true",
+        default=False,
+        help="overwrite existing files",
+    )
+
+    # Positional arguments
+    parser.add_argument(
+        "package_name",
+        default="s1aux.parse",
+        nargs="?",
+        help="path to the output Python package (default: '%(default)s')",
+    )
+
+    if subparsers is None:
+        _autocomplete(parser)
+
+    return parser
+
+
+def parse_args(args=None, namespace=None, parser=None):
+    """Parse command line arguments."""
+    if parser is None:
+        parser = get_parser()
+
+    args = parser.parse_args(args, namespace)
+
+    return args
+
+
+def main(*argv):
     """Implement the main CLI interface."""
     logging.basicConfig(format="%(levelname)s: %(message)s")
     logging.captureWarnings(True)
     log = logging.getLogger(__name__)
 
+    # parse cmd line arguments
+    args = parse_args(argv if argv else None)
+
     # execute main tasks
     exit_code = EX_OK
     try:
-        datadir = download_aux_products()
-        xsd_dir = _make_xds_dir(datadir)
-        outdir = generate_s1aux_package(xsd_dir)
+        # NOTE: use the root logger to set the logging level
+        logging.getLogger().setLevel(args.loglevel)
+
+        quiet: bool = bool(getattr(logging, args.loglevel) < logging.INFO)
+
+        if args.layout is ELayout.FLAT:
+            query_params = DEFAULT_QUERY_PARAMS
+        else:
+            query_params = FULL_QUERY_PARAMS
+
+        datadir = download_aux_products(
+            args.datadir, query_params=query_params
+        )
+        xsd_dir = _make_xds_dir(datadir, args.xsd_dir, layout=args.layout)
+        outdir = generate_s1aux_package(
+            xsd_dir,
+            args.package_name,
+            config_file=args.config_file,
+            overwrite=args.force,
+            quiet=quiet,
+        )
         log.info("x1aux package generated in '%s'", outdir)
     except Exception as exc:  # noqa: B902 BLE001
         log.critical(
