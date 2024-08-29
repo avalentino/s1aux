@@ -98,7 +98,7 @@ select = [
     "ISC",  # ISC flake8-implicit-str-concat
     "ICN",  # ICN flake8-import-conventions
     "G",    #   G flake8-logging-format
-    "INP",  # INP flake8-no-pep420
+    # "INP",  # INP flake8-no-pep420
             # PIE flake8-pie
     "T20",  # T20 flake8-print
             # PYI flake8-pyi
