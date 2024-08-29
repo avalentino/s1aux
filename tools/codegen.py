@@ -11,11 +11,13 @@ import logging
 import pathlib
 import argparse
 import warnings
+import itertools
 import subprocess
 from typing import Optional
 from xml.etree import ElementTree as etree  # noqa: N813
 from urllib.parse import urlencode, urlparse
 
+import tqdm
 import requests
 
 try:
@@ -28,18 +30,25 @@ EX_INTERRUPT = 130
 
 SAR_MPC_API_URL = "https://sar-mpc.eu/api/v1"
 DEFAULT_QUERY_PARAMS = {
+    "product_type__in": "AUX_PP1,AUX_CAL,AUX_INS,AUX_PP2,AUX_SCF,AUX_ITC",
+    # AUX_SCS,AUX_ML2
     "sentinel1__mission": "S1A",
     "sentinel1__instr_conf_id": "7",
     "adf__active": "true",
     # "mode": "extended",
 }
 FULL_QUERY_PARAMS = {
-    "sentinel1__mission": "S1A",
+    "product_type__in": "AUX_PP1,AUX_CAL,AUX_INS,AUX_PP2,AUX_SCF,AUX_ITC",
+    # AUX_SCS,AUX_ML2
+    # "sentinel1__mission": "S1A",
     # "mode": "extended",
 }
 
 
 PathType = str | os.PathLike[str]
+
+
+_log = logging.getLogger(__name__)
 
 
 class ELayout(enum.Enum):
@@ -71,17 +80,51 @@ def _download(url: str, outfile: Optional[PathType] = None) -> pathlib.Path:
     return outfile
 
 
+def _iter_pages(url):
+    response = requests.get(url)
+    response.raise_for_status()
+
+    page_data = response.json()
+    while page_data:
+        yield page_data
+        next = page_data.get("next")
+        if next:
+            response = requests.get(next)
+            response.raise_for_status()
+            page_data = response.json()
+        else:
+            page_data = None
+
+
+def _download_archive_metadata(
+    query_params: dict[str, str] = DEFAULT_QUERY_PARAMS,
+):
+    query = query_url(**query_params)
+    archive_json: dict[str, list] = {"results": []}
+    for page, page_data in enumerate(_iter_pages(query)):
+        _log.debug(
+            "page: %s, count: %d, next: %s",
+            page,
+            page_data["count"],
+            page_data["next"],
+        )
+        archive_json["results"].extend(page_data["results"])
+    return archive_json
+
+
 def download_aux_products(
     datadir: PathType = "data",
     query_params: dict[str, str] = DEFAULT_QUERY_PARAMS,
 ) -> pathlib.Path:
     """Download a base set of auxiliary products."""
-    query = query_url(**query_params)
-    response = requests.get(query)
-    response.raise_for_status()
+    _log.info("query the archive")
+    archive_json = _download_archive_metadata(
+        query_params=query_params,
+    )
 
+    _log.info("download products")
     datadir = pathlib.Path(datadir)
-    for product in response.json()["results"]:
+    for product in tqdm.tqdm(archive_json["results"], unit="products"):
         url = product["remote_url"]
         outfile = datadir.joinpath(product["physical_name"])
         if not outfile.exists():
@@ -94,11 +137,17 @@ def download_aux_products(
 def _get_spec_version(product_dir: PathType) -> str | None:
     product_dir = pathlib.Path(product_dir)
     try:
-        xsdfile = next(product_dir.glob("support/s1-aux-*.xsd"))
-    except StopAsyncIteration:
-        raise FileNotFoundError(
-            "No AUX XSD found in '{product_dir}'"
-        ) from None
+        xsdfile = next(
+            itertools.chain(
+                product_dir.glob("support/s1-aux-*.xsd"),
+                product_dir.glob("support/s1--aux-*.xsd"),  # TODO: check
+            ),
+        )
+    except StopIteration:
+        msg = f"No AUX XSD found in '{product_dir}'"
+        warnings.warn(msg, stacklevel=2)  # TODO: check
+        # raise FileNotFoundError(msg) from None
+        return None
 
     return etree.parse(xsdfile).getroot().attrib.get("version")
 
@@ -249,14 +298,13 @@ def generate_s1aux_package(
     quiet: bool = True,
 ) -> str:
     """Generate the Python package for s1aux using xsdata and input XSDs."""
-    log = logging.getLogger(__name__)
     xsd_dir = pathlib.Path(xsd_dir)
 
     if len(list(xsd_dir.glob("*.xsd"))) > 0:
         layout = ELayout.FLAT
     else:
         layout = ELayout.NESTED
-    log.info("layout: %s", layout)
+    _log.info("layout: %s", layout)
 
     if layout is ELayout.FLAT:
         return generate_s1aux_package_core(
@@ -268,11 +316,11 @@ def generate_s1aux_package(
         )
     else:
         for versioned_xsd_dir in xsd_dir.glob("v[0-9].*"):
-            log.info("versioned_xsd_dir: %s", versioned_xsd_dir)
+            _log.info("versioned_xsd_dir: %s", versioned_xsd_dir)
 
             normalized_version = versioned_xsd_dir.name.replace(".", "_")
             versioned_package_name = f"{package_name}.{normalized_version}"
-            log.info("package_name: %s", versioned_package_name)
+            _log.info("package_name: %s", versioned_package_name)
 
             generate_s1aux_package_core(
                 versioned_xsd_dir,
