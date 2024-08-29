@@ -32,7 +32,7 @@ dist:
 	$(PYTHON) -m twine check dist/*.tar.gz dist/*.whl
 
 check:
-	$(PYTHON) -m pytest --doctest-modules
+	$(PYTHON) -m pytest --doctest-modules $(TARGET) tests
 
 fullcheck:
 	$(PYTHON) -m tox run
@@ -59,7 +59,7 @@ docs:
 clean:
 	$(RM) -r *.*-info build
 	find . -name __pycache__ -type d -exec $(RM) -r {} +
-	# $(RM) -r __pycache__ */__pycache__ */*/__pycache__ */*/*/__pycache__
+	# $(RM) -r __pycache__ */__pycache__ */*/__pycache__ */*/*/__pycache__ */*/*/*/__pycache__
 	$(RM) $(TARGET)/_*.c $(TARGET)/*.so $(TARGET)/*.o
 	if [ -f docs/Makefile ] ; then $(MAKE) -C docs clean; fi
 	$(RM) -r docs/_build
@@ -67,7 +67,7 @@ clean:
 cleaner: clean
 	$(RM) -r .coverage htmlcov
 	$(RM) -r .pytest_cache .tox
-	$(RM) -r .mypy_cache .ruff_cache
+	$(RM) -r .mypy_cache .ruff_cache tools/.ruff_cache
 	$(RM) -r .ipynb_checkpoints
 
 distclean: cleaner
