@@ -178,7 +178,10 @@ def _process_xsd(
     target_xsd_dir: pathlib.Path,
     strict: bool = False,
 ) -> None:
-    dst = target_xsd_dir.joinpath(path.name.removeprefix("s1-aux-"))
+    dst = target_xsd_dir.joinpath(
+        # TODO: check
+        path.name.removeprefix("s1-aux-").removeprefix("s1--aux-")
+    )
     if dst.exists():
         left_data = path.read_text()
         right_data = dst.read_text()
