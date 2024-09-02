@@ -15,7 +15,7 @@ import itertools
 import subprocess
 import collections
 from typing import Optional
-from xml.etree import ElementTree as etree  # noqa: N813
+from xml.etree import ElementTree as etree  # noqa: N813,ICN001
 from urllib.parse import urlencode, urlparse
 
 import tqdm
@@ -89,9 +89,9 @@ def _iter_pages(url):
     page_data = response.json()
     while page_data:
         yield page_data
-        next = page_data.get("next")
-        if next:
-            response = requests.get(next)
+        next_ = page_data.get("next")
+        if next_:
+            response = requests.get(next_)
             response.raise_for_status()
             page_data = response.json()
         else:
@@ -101,6 +101,7 @@ def _iter_pages(url):
 def download_archive_metadata(
     query_params: dict[str, str] = DEFAULT_QUERY_PARAMS,
 ):
+    """Download metadata of requested products from the archive."""
     query = query_url(**query_params)
     archive_json: dict[str, list] = {"results": []}
     for page, page_data in enumerate(_iter_pages(query)):
@@ -135,6 +136,7 @@ def download_aux_products(
 
 
 def get_spec_version(product_dir: PathType) -> str | None:
+    """Return the product specification version for the input aux product."""
     product_dir = pathlib.Path(product_dir)
     try:
         xsdfile = next(
@@ -177,7 +179,7 @@ def _normalized_spec_version(
     spec_version: str, sep: str = ".", fallback: str = "v_.__"
 ):
     try:
-        major, minor = [int(item) for item in spec_version.split(".")]
+        major, minor = (int(item) for item in spec_version.split("."))
     except ValueError:
         return fallback
     return f"v{major}{sep}{minor:02d}"
@@ -222,6 +224,7 @@ def make_xds_dir(
     layout: ELayout = ELayout.NESTED,
     strict: bool = False,
 ) -> pathlib.Path:
+    """Populate the XSD diractory using aux products support data."""
     datadir = pathlib.Path(datadir)
     if not datadir.exists():
         raise FileNotFoundError(str(datadir))
@@ -284,7 +287,7 @@ def make_xds_dir(
                         try:
                             _process_xsd(path, target_xsd_dir, strict)
                         except FileExistsError as exc:
-                            warnings.warn(str(exc))
+                            warnings.warn(str(exc), stacklevel=1)
 
                 count += 1
 
