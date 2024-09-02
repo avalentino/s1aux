@@ -13,6 +13,7 @@ import argparse
 import warnings
 import itertools
 import subprocess
+import collections
 from typing import Optional
 from xml.etree import ElementTree as etree  # noqa: N813
 from urllib.parse import urlencode, urlparse
@@ -49,6 +50,7 @@ PathType = str | os.PathLike[str]
 
 
 _log = logging.getLogger(__name__)
+PROCESS_UNVERSIONED: bool = False
 
 
 class ELayout(enum.Enum):
@@ -96,7 +98,7 @@ def _iter_pages(url):
             page_data = None
 
 
-def _download_archive_metadata(
+def download_archive_metadata(
     query_params: dict[str, str] = DEFAULT_QUERY_PARAMS,
 ):
     query = query_url(**query_params)
@@ -118,13 +120,11 @@ def download_aux_products(
 ) -> pathlib.Path:
     """Download a base set of auxiliary products."""
     _log.info("query the archive")
-    archive_json = _download_archive_metadata(
-        query_params=query_params,
-    )
+    archive_data = download_archive_metadata(query_params=query_params)
 
     _log.info("download products")
     datadir = pathlib.Path(datadir)
-    for product in tqdm.tqdm(archive_json["results"], unit="products"):
+    for product in tqdm.tqdm(archive_data["results"], unit="products"):
         url = product["remote_url"]
         outfile = datadir.joinpath(product["physical_name"])
         if not outfile.exists():
@@ -134,7 +134,7 @@ def download_aux_products(
     return datadir
 
 
-def _get_spec_version(product_dir: PathType) -> str | None:
+def get_spec_version(product_dir: PathType) -> str | None:
     product_dir = pathlib.Path(product_dir)
     try:
         xsdfile = next(
@@ -173,6 +173,16 @@ def _detect_changes(left: str, right: str) -> _EChange:
     return changed
 
 
+def _normalized_spec_version(
+    spec_version: str, sep: str = ".", fallback: str = "v_.__"
+):
+    try:
+        major, minor = [int(item) for item in spec_version.split(".")]
+    except ValueError:
+        return fallback
+    return f"v{major}{sep}{minor:02d}"
+
+
 def _process_xsd(
     path: pathlib.Path,
     target_xsd_dir: pathlib.Path,
@@ -206,7 +216,7 @@ def _process_xsd(
         shutil.copy(path, dst)
 
 
-def _make_xds_dir(
+def make_xds_dir(
     datadir: PathType,
     xsd_dir: PathType = "xsd",
     layout: ELayout = ELayout.NESTED,
@@ -219,20 +229,26 @@ def _make_xds_dir(
     xsd_dir = pathlib.Path(xsd_dir)
 
     count = 0
+    unversioned = collections.defaultdict(list)
     for product_dir in datadir.glob("S1?_AUX_*.SAFE"):
-        spec_version = _get_spec_version(product_dir)
+        spec_version = get_spec_version(product_dir)
         if spec_version is None:
             warnings.warn(
                 f"Unable to retrieve the specification version for "
                 f"'{product_dir.name}', skip.",
                 stacklevel=1,
             )
+            # spec_version = None
+            gdate = product_dir.stem[29:38]
+            unversioned[gdate].append(product_dir)
             continue
 
         count += 1
 
         if layout is ELayout.NESTED:
-            target_xsd_dir = xsd_dir / f"v{spec_version}"
+            target_xsd_dir = xsd_dir.joinpath(
+                _normalized_spec_version(spec_version)
+            )
         else:
             target_xsd_dir = xsd_dir
 
@@ -240,6 +256,37 @@ def _make_xds_dir(
 
         for path in product_dir.glob("**/*.xsd"):
             _process_xsd(path, target_xsd_dir, strict)
+
+    if PROCESS_UNVERSIONED:
+        unversioned_keys = sorted(
+            key for key in unversioned.keys() if key >= "G20140909"
+        )
+        if layout is ELayout.NESTED:
+            key = unversioned_keys[0]
+            target_xsd_dir = xsd_dir.joinpath(key)
+        else:
+            target_xsd_dir = xsd_dir
+
+        for key in unversioned_keys:
+            for product_dir in unversioned[key]:
+                target_xsd_dir.mkdir(parents=True, exist_ok=True)
+                try:
+                    for path in product_dir.glob("**/*.xsd"):
+                        _process_xsd(path, target_xsd_dir, strict)
+                except FileExistsError:
+                    if layout is ELayout.NESTED:
+                        target_xsd_dir = xsd_dir.joinpath(key)
+                    else:
+                        target_xsd_dir = xsd_dir
+                    target_xsd_dir.mkdir(parents=True, exist_ok=True)
+
+                    for path in product_dir.glob("**/*.xsd"):
+                        try:
+                            _process_xsd(path, target_xsd_dir, strict)
+                        except FileExistsError as exc:
+                            warnings.warn(str(exc))
+
+                count += 1
 
     if count < 1:
         raise FileNotFoundError(f"No XSD files found in {xsd_dir}")
@@ -332,6 +379,23 @@ def generate_s1aux_package(
                 overwrite=overwrite,
                 quiet=quiet,
             )
+
+        if PROCESS_UNVERSIONED:
+            for versioned_xsd_dir in xsd_dir.glob("G*"):
+                _log.info("versioned_xsd_dir: %s", versioned_xsd_dir)
+
+                normalized_version = str(versioned_xsd_dir)
+                versioned_package_name = f"{package_name}.{normalized_version}"
+                _log.info("package_name: %s", versioned_package_name)
+
+                generate_s1aux_package_core(
+                    versioned_xsd_dir,
+                    versioned_package_name,
+                    config_file=config_file,
+                    overwrite=overwrite,
+                    quiet=quiet,
+                )
+
         return package_name
 
 
@@ -506,7 +570,7 @@ def main(*argv):
         datadir = download_aux_products(
             args.datadir, query_params=query_params
         )
-        xsd_dir = _make_xds_dir(
+        xsd_dir = make_xds_dir(
             datadir, args.xsd_dir, layout=args.layout, strict=args.strict
         )
         outdir = generate_s1aux_package(
@@ -516,7 +580,7 @@ def main(*argv):
             overwrite=args.force,
             quiet=quiet,
         )
-        log.info("x1aux package generated in '%s'", outdir)
+        log.info("%s package generated in '%s'", args.package_name, outdir)
     except Exception as exc:  # noqa: B902 BLE001
         log.critical(
             "unexpected exception caught: %r %s", type(exc).__name__, exc
