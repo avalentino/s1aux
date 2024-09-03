@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xfdu:XFDU xmlns:s1auxsar="http://www.esa.int/safe/sentinel-1.0/sentinel-1/auxiliary/sar" xmlns:safe="http://www.esa.int/safe/sentinel-1.0" xmlns:xfdu="urn:ccsds:schema:xfdu:1" version="esa/safe/sentinel-1.0/sentinel-1/auxiliary/sar/ins">
+  <informationPackageMap>
+    <xfdu:contentUnit dmdID="platform" pdiID="processing" textInfo="SENTINEL-1B L1 Auxiliary Instrument Parameters" unitType="SAFE Archive Information Package">
+      <xfdu:contentUnit repID="auxSchema" unitType="Measurement Data Unit">
+        <dataObjectPointer dataObjectID="auxData" />
+      </xfdu:contentUnit>
+    </xfdu:contentUnit>
+  </informationPackageMap>
+  <metadataSection>
+    <metadataObject ID="processing" category="PDI" classification="PROVENANCE">
+      <metadataWrap mimeType="text/xml" textInfo="Processing" vocabularyName="SAFE">
+        <xmlData>
+          <safe:processing name="AUX_INS Generation" start="2021-10-27T13:43:14.000000" stop="2021-10-27T13:43:14.000000">
+            <safe:facility country="France" name="Copernicus S1 Core Ground Segment - MPC" organisation="ESA" site="CLS-Brest" />
+          </safe:processing>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="platform" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Platform Description" vocabularyName="SAFE">
+        <xmlData>
+          <safe:platform>
+            <safe:nssdcIdentifier>2016-025A</safe:nssdcIdentifier>
+            <safe:familyName>SENTINEL-1</safe:familyName>
+            <safe:number>B</safe:number>
+            <safe:instrument>
+              <safe:familyName abbreviation="SAR">Synthetic Aperture Radar</safe:familyName>
+            </safe:instrument>
+          </safe:platform>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="standAloneProductInformation" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Stand Alone Product Information" vocabularyName="SAFE">
+        <xmlData>
+          <s1auxsar:standAloneProductInformation>
+            <s1auxsar:auxProductType>AUX_INS</s1auxsar:auxProductType>
+            <s1auxsar:validity>2016-04-22T00:00:00.000000</s1auxsar:validity>
+            <s1auxsar:generation>2021-10-27T13:43:14.000000</s1auxsar:generation>
+            <s1auxsar:instrumentConfigurationId>1</s1auxsar:instrumentConfigurationId>
+            <s1auxsar:changeDescription><![CDATA[Description:
+Circulation of S1B_AUX_INS to be compliant with IPF3.40 with the introduction of two fields:
+- onBoardDecimationFilterParamsList for modes IW/EW to support RFI mitigation processing,
+- deltaTXLatch parameter used to perfom instrument timing correction.
+
+References:
+RDBADF: RDBADF-121
+MPCS: MPCS-2357; MPCS-1574]]></s1auxsar:changeDescription>
+          </s1auxsar:standAloneProductInformation>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="auxSchema" category="REP" classification="SYNTAX">
+      <metadataReference href="./support/s1-aux-ins.xsd" locatorType="URL" mimeType="text/xml" />
+    </metadataObject>
+    <metadataObject ID="s1ObjectTypesSchema" category="REP" classification="SYNTAX">
+      <metadataReference href="./support/s1-object-types.xsd" locatorType="URL" mimeType="text/xml" />
+    </metadataObject>
+  </metadataSection>
+  <dataObjectSection>
+    <dataObject ID="auxData" repID="auxSchema">
+      <byteStream mimeType="text/xml" size="1211629">
+        <fileLocation href="./data/s1b-aux-ins.xml" locatorType="URL" />
+        <checksum checksumName="MD5">fe5bb3dac4c91f7a2608e8fd824cc61f</checksum>
+      </byteStream>
+    </dataObject>
+  </dataObjectSection>
+</xfdu:XFDU>

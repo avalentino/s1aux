@@ -1,0 +1,345 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<auxiliarySetap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="1.6" xsi:noNamespaceSchemaLocation="../support/s1-aux-itc.xsd">
+  <instrumentTimingCalibrationReference>
+    <rangeCalibration unit="s">1.1281e-09</rangeCalibration>
+    <azimuthCalibration unit="s">1.2873e-05</azimuthCalibration>
+  </instrumentTimingCalibrationReference>
+  <instrumentTimingCalibrationOffsetList count="56">
+    <instrumentTimingCalibrationOffset>
+      <swath>S1</swath>
+      <polarisation>HH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S1</swath>
+      <polarisation>HV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S1</swath>
+      <polarisation>VV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S1</swath>
+      <polarisation>VH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S2</swath>
+      <polarisation>HH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S2</swath>
+      <polarisation>HV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S2</swath>
+      <polarisation>VV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S2</swath>
+      <polarisation>VH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S3</swath>
+      <polarisation>HH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S3</swath>
+      <polarisation>HV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S3</swath>
+      <polarisation>VV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S3</swath>
+      <polarisation>VH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S4</swath>
+      <polarisation>HH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S4</swath>
+      <polarisation>HV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S4</swath>
+      <polarisation>VV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S4</swath>
+      <polarisation>VH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S5</swath>
+      <polarisation>HH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S5</swath>
+      <polarisation>HV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S5</swath>
+      <polarisation>VV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S5</swath>
+      <polarisation>VH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S6</swath>
+      <polarisation>HH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S6</swath>
+      <polarisation>HV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S6</swath>
+      <polarisation>VV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>S6</swath>
+      <polarisation>VH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>IW1</swath>
+      <polarisation>HH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>IW1</swath>
+      <polarisation>HV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>IW1</swath>
+      <polarisation>VV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>IW1</swath>
+      <polarisation>VH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>IW2</swath>
+      <polarisation>HH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>IW2</swath>
+      <polarisation>HV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>IW2</swath>
+      <polarisation>VV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>IW2</swath>
+      <polarisation>VH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>IW3</swath>
+      <polarisation>HH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>IW3</swath>
+      <polarisation>HV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>IW3</swath>
+      <polarisation>VV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>IW3</swath>
+      <polarisation>VH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW1</swath>
+      <polarisation>HH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW1</swath>
+      <polarisation>HV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW1</swath>
+      <polarisation>VV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW1</swath>
+      <polarisation>VH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW2</swath>
+      <polarisation>HH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW2</swath>
+      <polarisation>HV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW2</swath>
+      <polarisation>VV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW2</swath>
+      <polarisation>VH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW3</swath>
+      <polarisation>HH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW3</swath>
+      <polarisation>HV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW3</swath>
+      <polarisation>VV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW3</swath>
+      <polarisation>VH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW4</swath>
+      <polarisation>HH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW4</swath>
+      <polarisation>HV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW4</swath>
+      <polarisation>VV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW4</swath>
+      <polarisation>VH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW5</swath>
+      <polarisation>HH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW5</swath>
+      <polarisation>HV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW5</swath>
+      <polarisation>VV</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+    <instrumentTimingCalibrationOffset>
+      <swath>EW5</swath>
+      <polarisation>VH</polarisation>
+      <rangeOffset unit="s">0.0</rangeOffset>
+      <azimuthOffset unit="s">0.0</azimuthOffset>
+    </instrumentTimingCalibrationOffset>
+  </instrumentTimingCalibrationOffsetList>
+</auxiliarySetap>

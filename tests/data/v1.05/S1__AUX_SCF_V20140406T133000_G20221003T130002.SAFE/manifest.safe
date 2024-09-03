@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xfdu:XFDU xmlns:s1auxsar="http://www.esa.int/safe/sentinel-1.0/sentinel-1/auxiliary/sar" xmlns:safe="http://www.esa.int/safe/sentinel-1.0" xmlns:xfdu="urn:ccsds:schema:xfdu:1" version="esa/safe/sentinel-1.0/sentinel-1/auxiliary/sar/scf">
+  <informationPackageMap>
+    <xfdu:contentUnit dmdID="platform" pdiID="processing" textInfo="SENTINEL-1 SETAP Configuration File" unitType="SAFE Archive Information Package">
+      <xfdu:contentUnit repID="auxSchema" unitType="Measurement Data Unit">
+        <dataObjectPointer dataObjectID="auxData" />
+      </xfdu:contentUnit>
+    </xfdu:contentUnit>
+  </informationPackageMap>
+  <metadataSection>
+    <metadataObject ID="processing" category="PDI" classification="PROVENANCE">
+      <metadataWrap mimeType="text/xml" textInfo="Processing" vocabularyName="SAFE">
+        <xmlData>
+          <safe:processing name="AUX_SCF Generation" start="2022-10-03T13:00:02.000000" stop="2022-10-03T13:00:02.000000">
+            <safe:facility country="Germany" name="MF-SAR" organisation="DLR" site="Remote Sensing Technology Institute - MF-SAR" />
+          </safe:processing>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="platform" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Platform Description" vocabularyName="SAFE">
+        <xmlData>
+          <safe:platform>
+            <safe:nssdcIdentifier>2014-016A</safe:nssdcIdentifier>
+            <safe:familyName>SENTINEL-1</safe:familyName>
+            <safe:number>A</safe:number>
+            <safe:instrument>
+              <safe:familyName abbreviation="SAR">Synthetic Aperture Radar</safe:familyName>
+            </safe:instrument>
+          </safe:platform>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="standAloneProductInformation" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Stand Alone Product Information" vocabularyName="SAFE">
+        <xmlData>
+          <s1auxsar:standAloneProductInformation>
+            <s1auxsar:auxProductType>AUX_SCF</s1auxsar:auxProductType>
+            <s1auxsar:validity>2014-04-06T13:30:00.000000</s1auxsar:validity>
+            <s1auxsar:generation>2022-10-03T13:00:02.000000</s1auxsar:generation>
+            <s1auxsar:instrumentConfigurationId>0</s1auxsar:instrumentConfigurationId>
+            <s1auxsar:changeDescription><![CDATA[Description: 
+First version of the AUX SCF prepared by SAR-MPC for the SETAP-IPF. It provides the default configuration for the computation of correction layers of nominal S-1 ETAD products. 
+This version of AUX SCF is applicable to SETAP-IPF version 2.0, see specification in ETAD-DLR-DD-0009 Processor Configuration Description-Document Issue 1.5.
+
+References:
+RDBADF: RDBADF-129]]></s1auxsar:changeDescription>
+          </s1auxsar:standAloneProductInformation>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="auxSchema" category="REP" classification="SYNTAX">
+      <metadataReference href="./support/s1--aux-scf.xsd" locatorType="URL" mimeType="text/xml" />
+    </metadataObject>
+  </metadataSection>
+  <dataObjectSection>
+    <dataObject ID="auxData" repID="auxSchema">
+      <byteStream mimeType="text/xml" size="2091">
+        <fileLocation href="./data/s1--aux-scf.xml" locatorType="URL" />
+        <checksum checksumName="MD5">03903cd9f69d24c265d14e29c4bd4f8e</checksum>
+      </byteStream>
+    </dataObject>
+  </dataObjectSection>
+</xfdu:XFDU>

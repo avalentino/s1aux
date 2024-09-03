@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xfdu:XFDU xmlns:s1auxsar="http://www.esa.int/safe/sentinel-1.0/sentinel-1/auxiliary/sar" xmlns:safe="http://www.esa.int/safe/sentinel-1.0" xmlns:xfdu="urn:ccsds:schema:xfdu:1" version="esa/safe/sentinel-1.0/sentinel-1/auxiliary/sar/pp2">
+  <informationPackageMap>
+    <xfdu:contentUnit dmdID="platform" pdiID="processing" textInfo="SENTINEL-1B L2 Auxiliary Processor Parameters" unitType="SAFE Archive Information Package">
+      <xfdu:contentUnit repID="auxSchema" unitType="Measurement Data Unit">
+        <dataObjectPointer dataObjectID="auxData" />
+      </xfdu:contentUnit>
+    </xfdu:contentUnit>
+  </informationPackageMap>
+  <metadataSection>
+    <metadataObject ID="processing" category="PDI" classification="PROVENANCE">
+      <metadataWrap mimeType="text/xml" textInfo="Processing" vocabularyName="SAFE">
+        <xmlData>
+          <safe:processing name="AUX_PP2 Generation" start="2024-06-12T13:12:42.000000" stop="2024-06-12T13:12:42.000000">
+            <safe:facility country="France" name="Copernicus S1 Core Ground Segment - MPC" organisation="ESA" site="CLS-Brest" />
+          </safe:processing>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="platform" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Platform Description" vocabularyName="SAFE">
+        <xmlData>
+          <safe:platform>
+            <safe:nssdcIdentifier>2016-025A</safe:nssdcIdentifier>
+            <safe:familyName>SENTINEL-1</safe:familyName>
+            <safe:number>B</safe:number>
+            <safe:instrument>
+              <safe:familyName abbreviation="SAR">Synthetic Aperture Radar</safe:familyName>
+            </safe:instrument>
+          </safe:platform>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="standAloneProductInformation" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Stand Alone Product Information" vocabularyName="SAFE">
+        <xmlData>
+          <s1auxsar:standAloneProductInformation>
+            <s1auxsar:auxProductType>AUX_PP2</s1auxsar:auxProductType>
+            <s1auxsar:validity>2016-04-22T00:00:00.000000</s1auxsar:validity>
+            <s1auxsar:generation>2024-06-12T13:12:42.000000</s1auxsar:generation>
+            <s1auxsar:instrumentConfigurationId>1</s1auxsar:instrumentConfigurationId>
+            <s1auxsar:changeDescription><![CDATA[Description:
+- Deactivate OSW/totalHS computation for WV_OCN__2 for both WV1 and WV2 due to a change in content of Simulated Cross Spectra requiring a retraining of the algorithm
+- Set OSW/activateNoiseCorrection to True on WV_OCN__2 on SM_OCN__2 products, activating noise correction for the wind estimation required as a preprocessing of swell inversion
+
+Change of format of PP2 related to IPF 003.80
+- Add seaCoverageThreshold for SM_OCN__2 and WV_OCN__2 products. Processing blocks having less than this percentage overlapping ocean are not considered
+- Add OSW/useOnlyInference parameter of WV_OCN__2 products for the extraction of TotalHS and QualityFlag parameters and set it to False (making it not blocking if corresponding inference is failing)
+
+References:
+RDBADF: RDBADF-143]]></s1auxsar:changeDescription>
+          </s1auxsar:standAloneProductInformation>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="auxSchema" category="REP" classification="SYNTAX">
+      <metadataReference href="./support/s1-aux-pp2.xsd" locatorType="URL" mimeType="text/xml" />
+    </metadataObject>
+    <metadataObject ID="s1ObjectTypesSchema" category="REP" classification="SYNTAX">
+      <metadataReference href="./support/s1-object-types.xsd" locatorType="URL" mimeType="text/xml" />
+    </metadataObject>
+  </metadataSection>
+  <dataObjectSection>
+    <dataObject ID="auxData" repID="auxSchema">
+      <byteStream mimeType="text/xml" size="9474">
+        <fileLocation href="./data/s1b-aux-pp2.xml" locatorType="URL" />
+        <checksum checksumName="MD5">cd4659b50e84ccb9936449cb12499ce3</checksum>
+      </byteStream>
+    </dataObject>
+  </dataObjectSection>
+</xfdu:XFDU>

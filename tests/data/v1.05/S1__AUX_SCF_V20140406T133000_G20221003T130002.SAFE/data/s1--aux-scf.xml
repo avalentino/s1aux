@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<setapConf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="1.5" xsi:noNamespaceSchemaLocation="../support/s1--aux-scf.xsd">
+  <generalProcessorConf>
+    <listOfGlobalParams>
+      <troposphericDelayCorrection>true</troposphericDelayCorrection>
+      <ionosphericDelayCorrection>true</ionosphericDelayCorrection>
+      <solidEarthTideCorrection>true</solidEarthTideCorrection>
+    </listOfGlobalParams>
+  </generalProcessorConf>
+  <modeRelatedConf>
+    <listOfModes count="3">
+      <mode>
+        <name>S1-ETAD-SM</name>
+        <listOfModeParams>
+          <correctionGridRangeSampling unit="m">200</correctionGridRangeSampling>
+          <correctionGridAzimuthSampling unit="m">200</correctionGridAzimuthSampling>
+          <bistaticAzimuthCorrection>true</bistaticAzimuthCorrection>
+          <dopplerShiftRangeCorrection>false</dopplerShiftRangeCorrection>
+          <fmMismatchAzimuthCorrection>false</fmMismatchAzimuthCorrection>
+        </listOfModeParams>
+      </mode>
+      <mode>
+        <name>S1-ETAD-IW</name>
+        <listOfModeParams>
+          <correctionGridRangeSampling unit="m">200</correctionGridRangeSampling>
+          <correctionGridAzimuthSampling unit="m">200</correctionGridAzimuthSampling>
+          <bistaticAzimuthCorrection>true</bistaticAzimuthCorrection>
+          <dopplerShiftRangeCorrection>true</dopplerShiftRangeCorrection>
+          <fmMismatchAzimuthCorrection>true</fmMismatchAzimuthCorrection>
+        </listOfModeParams>
+      </mode>
+      <mode>
+        <name>S1-ETAD-EW</name>
+        <listOfModeParams>
+          <correctionGridRangeSampling unit="m">200</correctionGridRangeSampling>
+          <correctionGridAzimuthSampling unit="m">200</correctionGridAzimuthSampling>
+          <bistaticAzimuthCorrection>true</bistaticAzimuthCorrection>
+          <dopplerShiftRangeCorrection>true</dopplerShiftRangeCorrection>
+          <fmMismatchAzimuthCorrection>true</fmMismatchAzimuthCorrection>
+        </listOfModeParams>
+      </mode>
+    </listOfModes>
+  </modeRelatedConf>
+</setapConf>

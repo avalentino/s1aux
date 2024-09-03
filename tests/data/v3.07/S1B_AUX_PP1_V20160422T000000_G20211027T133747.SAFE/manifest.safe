@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xfdu:XFDU xmlns:s1auxsar="http://www.esa.int/safe/sentinel-1.0/sentinel-1/auxiliary/sar" xmlns:safe="http://www.esa.int/safe/sentinel-1.0" xmlns:xfdu="urn:ccsds:schema:xfdu:1" version="esa/safe/sentinel-1.0/sentinel-1/auxiliary/sar/pp1">
+  <informationPackageMap>
+    <xfdu:contentUnit dmdID="platform" pdiID="processing" textInfo="SENTINEL-1B L1 Auxiliary Processor Parameters" unitType="SAFE Archive Information Package">
+      <xfdu:contentUnit repID="auxSchema" unitType="Measurement Data Unit">
+        <dataObjectPointer dataObjectID="auxData" />
+      </xfdu:contentUnit>
+    </xfdu:contentUnit>
+  </informationPackageMap>
+  <metadataSection>
+    <metadataObject ID="processing" category="PDI" classification="PROVENANCE">
+      <metadataWrap mimeType="text/xml" textInfo="Processing" vocabularyName="SAFE">
+        <xmlData>
+          <safe:processing name="AUX_PP1 Generation" start="2021-10-27T13:37:47.000000" stop="2021-10-27T13:37:47.000000">
+            <safe:facility country="France" name="Copernicus S1 Core Ground Segment - MPC" organisation="ESA" site="CLS-Brest" />
+          </safe:processing>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="platform" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Platform Description" vocabularyName="SAFE">
+        <xmlData>
+          <safe:platform>
+            <safe:nssdcIdentifier>2016-025A</safe:nssdcIdentifier>
+            <safe:familyName>SENTINEL-1</safe:familyName>
+            <safe:number>B</safe:number>
+            <safe:instrument>
+              <safe:familyName abbreviation="SAR">Synthetic Aperture Radar</safe:familyName>
+            </safe:instrument>
+          </safe:platform>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="standAloneProductInformation" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Stand Alone Product Information" vocabularyName="SAFE">
+        <xmlData>
+          <s1auxsar:standAloneProductInformation>
+            <s1auxsar:auxProductType>AUX_PP1</s1auxsar:auxProductType>
+            <s1auxsar:validity>2016-04-22T00:00:00.000000</s1auxsar:validity>
+            <s1auxsar:generation>2021-10-27T13:37:47.000000</s1auxsar:generation>
+            <s1auxsar:instrumentConfigurationId>1</s1auxsar:instrumentConfigurationId>
+            <s1auxsar:changeDescription><![CDATA[Description:
+Circulation of S1B_AUX_PP1 to be compliant with IPF3.40.
+
+Introduction of two new processing flags relative to RFI mitigation:
+- rfiMitigationPerformed triggering the activation of RFI mitigation processing,
+- rfiMitigationDomain triggering the applied method.
+
+The RFI mitigation is deactivated for all type of S1B products.
+
+References:
+RDBADF: RDBADF-119
+MPCS: MPCS-2357]]></s1auxsar:changeDescription>
+          </s1auxsar:standAloneProductInformation>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="auxSchema" category="REP" classification="SYNTAX">
+      <metadataReference href="./support/s1-aux-pp1.xsd" locatorType="URL" mimeType="text/xml" />
+    </metadataObject>
+    <metadataObject ID="s1ObjectTypesSchema" category="REP" classification="SYNTAX">
+      <metadataReference href="./support/s1-object-types.xsd" locatorType="URL" mimeType="text/xml" />
+    </metadataObject>
+  </metadataSection>
+  <dataObjectSection>
+    <dataObject ID="auxData" repID="auxSchema">
+      <byteStream mimeType="text/xml" size="395107">
+        <fileLocation href="./data/s1b-aux-pp1.xml" locatorType="URL" />
+        <checksum checksumName="MD5">f812e631a1b7104dbfb444a89dc6737f</checksum>
+      </byteStream>
+    </dataObject>
+  </dataObjectSection>
+</xfdu:XFDU>

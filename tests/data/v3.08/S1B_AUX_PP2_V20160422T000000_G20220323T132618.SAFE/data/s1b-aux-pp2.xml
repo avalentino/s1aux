@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<l2AuxiliaryProcessorParameters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="3.8" xsi:noNamespaceSchemaLocation="../support/s1-aux-pp2.xsd">
+  <productList count="4">
+    <product>
+      <productId>SM_OCN__2</productId>
+      <ocnProcParams>
+        <oswProcParams>
+          <spectralEstimationParams>
+            <frequencySeparation>0.27e+00</frequencySeparation>
+            <rangeLookFilterWidth>0.75e+00</rangeLookFilterWidth>
+            <azimuthLookFilterWidth>0.25e+00</azimuthLookFilterWidth>
+            <numberOfLooks>3</numberOfLooks>
+            <numRangePixels>4800</numRangePixels>
+            <numAzimuthPixels>5000</numAzimuthPixels>
+          </spectralEstimationParams>
+          <spectralInversionParams>
+            <shortestWavelength>0.30e+02</shortestWavelength>
+            <longestWavelength>0.120e+04</longestWavelength>
+            <waveNumberBins>60</waveNumberBins>
+            <directionalBins>72</directionalBins>
+            <velthresh beam="S1">9</velthresh>
+            <velthresh beam="S2">9</velthresh>
+            <velthresh beam="S3">9</velthresh>
+            <velthresh beam="S4">19</velthresh>
+            <velthresh beam="S5">19</velthresh>
+            <velthresh beam="S6">19</velthresh>
+          </spectralInversionParams>
+          <activateTotalHs>false</activateTotalHs>
+          <activateGroupDir>false</activateGroupDir>
+          <activateNoiseCorrection>false</activateNoiseCorrection>
+        </oswProcParams>
+        <owiProcParams>
+          <rangeCellSize>1000</rangeCellSize>
+          <azimuthCellSize>1000</azimuthCellSize>
+          <distanceToShore>1.0e+03</distanceToShore>
+          <windSpeedStdDev>2.0e+00</windSpeedStdDev>
+          <windDirStdDev>2.0e+01</windDirStdDev>
+          <gmfIndex polarisation="HH">12</gmfIndex>
+          <gmfIndex polarisation="VV">12</gmfIndex>
+          <prIndex>1</prIndex>
+          <inversionQualityThreshold>1.0e+00</inversionQualityThreshold>
+          <calibrationQualityThreshold>0.5e+00</calibrationQualityThreshold>
+          <nrcsQualityThreshold>1.0e+00</nrcsQualityThreshold>
+          <brightTargetPfa>1.0e-05</brightTargetPfa>
+          <activateNoiseCorrection>true</activateNoiseCorrection>
+        </owiProcParams>
+        <rvlProcParams>
+          <rangeBlockSize>0.688e+03</rangeBlockSize>
+          <azimuthBlockSize>0.796e+03</azimuthBlockSize>
+          <rangeCellSize>0.688e+03</rangeCellSize>
+          <azimuthCellSize>0.794e+03</azimuthCellSize>
+        </rvlProcParams>
+      </ocnProcParams>
+    </product>
+    <product>
+      <productId>IW_OCN__2</productId>
+      <ocnProcParams>
+        <oswProcParams>
+          <spectralEstimationParams>
+            <frequencySeparation>0.000000000000000e+00</frequencySeparation>
+            <rangeLookFilterWidth>0.000000000000000e+00</rangeLookFilterWidth>
+            <azimuthLookFilterWidth>0.000000000000000e+00</azimuthLookFilterWidth>
+            <numberOfLooks>0</numberOfLooks>
+            <numRangePixels>0</numRangePixels>
+            <numAzimuthPixels>0</numAzimuthPixels>
+          </spectralEstimationParams>
+          <spectralInversionParams>
+            <shortestWavelength>0.000000000000000e+00</shortestWavelength>
+            <longestWavelength>0.000000000000000e+00</longestWavelength>
+            <waveNumberBins>0</waveNumberBins>
+            <directionalBins>0</directionalBins>
+            <velthresh>0</velthresh>
+          </spectralInversionParams>
+          <activateTotalHs>false</activateTotalHs>
+          <activateGroupDir>false</activateGroupDir>
+	  <activateNoiseCorrection>false</activateNoiseCorrection>
+        </oswProcParams>
+        <owiProcParams>
+          <rangeCellSize>1000</rangeCellSize>
+          <azimuthCellSize>1000</azimuthCellSize>
+          <distanceToShore>1.0e+03</distanceToShore>
+          <windSpeedStdDev>2.0e+00</windSpeedStdDev>
+          <windDirStdDev>2.0e+01</windDirStdDev>
+          <gmfIndex polarisation="HH">12</gmfIndex>
+          <gmfIndex polarisation="VV">12</gmfIndex>
+          <prIndex>1</prIndex>
+          <inversionQualityThreshold>1.0e+00</inversionQualityThreshold>
+          <calibrationQualityThreshold>0.5e+00</calibrationQualityThreshold>
+          <nrcsQualityThreshold>1.0e+00</nrcsQualityThreshold>
+          <brightTargetPfa>1.0e-05</brightTargetPfa>
+          <activateNoiseCorrection>true</activateNoiseCorrection>
+        </owiProcParams>
+        <rvlProcParams>
+          <rangeBlockSize>0.768e+03</rangeBlockSize>
+          <azimuthBlockSize>0.256e+03</azimuthBlockSize>
+          <rangeCellSize>0.768e+03</rangeCellSize>
+          <azimuthCellSize>0.254e+03</azimuthCellSize>
+        </rvlProcParams>
+      </ocnProcParams>
+    </product>
+    <product>
+      <productId>EW_OCN__2</productId>
+      <ocnProcParams>
+        <oswProcParams>
+          <spectralEstimationParams>
+            <frequencySeparation>0.000000000000000e+00</frequencySeparation>
+            <rangeLookFilterWidth>0.000000000000000e+00</rangeLookFilterWidth>
+            <azimuthLookFilterWidth>0.000000000000000e+00</azimuthLookFilterWidth>
+            <numberOfLooks>0</numberOfLooks>
+            <numRangePixels>0</numRangePixels>
+            <numAzimuthPixels>0</numAzimuthPixels>
+          </spectralEstimationParams>
+          <spectralInversionParams>
+            <shortestWavelength>0.000000000000000e+00</shortestWavelength>
+            <longestWavelength>0.000000000000000e+00</longestWavelength>
+            <waveNumberBins>0</waveNumberBins>
+            <directionalBins>0</directionalBins>
+            <velthresh>0</velthresh>
+          </spectralInversionParams>
+          <activateTotalHs>false</activateTotalHs>
+          <activateGroupDir>false</activateGroupDir>
+          <activateNoiseCorrection>false</activateNoiseCorrection>
+        </oswProcParams>
+        <owiProcParams>
+          <rangeCellSize>1000</rangeCellSize>
+          <azimuthCellSize>1000</azimuthCellSize>
+          <distanceToShore>1.0e+03</distanceToShore>
+          <windSpeedStdDev>2.0e+00</windSpeedStdDev>
+          <windDirStdDev>2.0e+01</windDirStdDev>
+          <gmfIndex polarisation="HH">12</gmfIndex>
+          <gmfIndex polarisation="VV">12</gmfIndex>
+          <prIndex>1</prIndex>
+          <inversionQualityThreshold>1.0e+00</inversionQualityThreshold>
+          <calibrationQualityThreshold>0.5e+00</calibrationQualityThreshold>
+          <nrcsQualityThreshold>1.0e+00</nrcsQualityThreshold>
+          <brightTargetPfa>1.0e-05</brightTargetPfa>
+          <activateNoiseCorrection>true</activateNoiseCorrection>
+        </owiProcParams>
+        <rvlProcParams>
+          <rangeBlockSize>0.298e+03</rangeBlockSize>
+          <azimuthBlockSize>0.230e+03</azimuthBlockSize>
+          <rangeCellSize>0.298e+03</rangeCellSize>
+          <azimuthCellSize>0.228e+03</azimuthCellSize>
+        </rvlProcParams>
+      </ocnProcParams>
+    </product>
+    <product>
+      <productId>WV_OCN__2</productId>
+      <ocnProcParams>
+        <oswProcParams>
+          <spectralEstimationParams>
+            <frequencySeparation>0.27e+00</frequencySeparation>
+            <rangeLookFilterWidth>0.75e+00</rangeLookFilterWidth>
+            <azimuthLookFilterWidth>0.25e+00</azimuthLookFilterWidth>
+            <numberOfLooks>3</numberOfLooks>
+            <numRangePixels>4700</numRangePixels>
+            <numAzimuthPixels>4900</numAzimuthPixels>
+          </spectralEstimationParams>
+          <spectralInversionParams>
+            <shortestWavelength>0.30e+02</shortestWavelength>
+            <longestWavelength>0.120e+04</longestWavelength>
+            <waveNumberBins>60</waveNumberBins>
+            <directionalBins>72</directionalBins>
+            <velthresh beam="WV1">9</velthresh>
+            <velthresh beam="WV2">19</velthresh>
+          </spectralInversionParams>
+          <activateTotalHs beam="WV1">false</activateTotalHs>
+          <activateTotalHs beam="WV2">false</activateTotalHs>
+          <activateGroupDir>false</activateGroupDir>
+          <activateNoiseCorrection>false</activateNoiseCorrection>
+        </oswProcParams>
+        <owiProcParams>
+          <rangeCellSize>1000</rangeCellSize>
+          <azimuthCellSize>1000</azimuthCellSize>
+          <distanceToShore>1.0e+03</distanceToShore>
+          <windSpeedStdDev>2.0e+00</windSpeedStdDev>
+          <windDirStdDev>2.0e+01</windDirStdDev>
+          <gmfIndex polarisation="VV">12</gmfIndex>
+          <gmfIndex polarisation="HH">12</gmfIndex>
+          <prIndex>1</prIndex>
+          <inversionQualityThreshold>1.0e+00</inversionQualityThreshold>
+          <calibrationQualityThreshold>0.5e+00</calibrationQualityThreshold>
+          <nrcsQualityThreshold>1.0e+00</nrcsQualityThreshold>
+          <brightTargetPfa>1.0e-05</brightTargetPfa>
+          <activateNoiseCorrection>true</activateNoiseCorrection>
+        </owiProcParams>
+        <rvlProcParams>
+          <rangeBlockSize>1.376e+03</rangeBlockSize>
+          <azimuthBlockSize>1.226e+03</azimuthBlockSize>
+          <rangeCellSize>1.376e+03</rangeCellSize>
+          <azimuthCellSize>1.226e+03</azimuthCellSize>
+        </rvlProcParams>
+      </ocnProcParams>
+    </product>
+  </productList>
+</l2AuxiliaryProcessorParameters>

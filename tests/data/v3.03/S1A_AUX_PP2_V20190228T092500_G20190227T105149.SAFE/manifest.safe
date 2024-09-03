@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xfdu:XFDU xmlns:s1auxsar="http://www.esa.int/safe/sentinel-1.0/sentinel-1/auxiliary/sar" xmlns:safe="http://www.esa.int/safe/sentinel-1.0" xmlns:xfdu="urn:ccsds:schema:xfdu:1" version="esa/safe/sentinel-1.0/sentinel-1/auxiliary/sar/pp2">
+  <informationPackageMap>
+    <xfdu:contentUnit dmdID="platform" pdiID="processing" textInfo="SENTINEL-1A L2 Auxiliary Processor Parameters" unitType="SAFE Archive Information Package">
+      <xfdu:contentUnit repID="auxSchema" unitType="Measurement Data Unit">
+        <dataObjectPointer dataObjectID="auxData" />
+      </xfdu:contentUnit>
+    </xfdu:contentUnit>
+  </informationPackageMap>
+  <metadataSection>
+    <metadataObject ID="processing" category="PDI" classification="PROVENANCE">
+      <metadataWrap mimeType="text/xml" textInfo="Processing" vocabularyName="SAFE">
+        <xmlData>
+          <safe:processing name="AUX_PP2 Generation" start="2019-02-27T10:51:49.000000" stop="2019-02-27T10:51:49.000000">
+            <safe:facility country="France" name="Copernicus S1 Core Ground Segment - MPC" organisation="ESA" site="CLS-Brest" />
+          </safe:processing>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="platform" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Platform Description" vocabularyName="SAFE">
+        <xmlData>
+          <safe:platform>
+            <safe:nssdcIdentifier>2014-016A</safe:nssdcIdentifier>
+            <safe:familyName>SENTINEL-1</safe:familyName>
+            <safe:number>A</safe:number>
+            <safe:instrument>
+              <safe:familyName abbreviation="SAR">Synthetic Aperture Radar</safe:familyName>
+            </safe:instrument>
+          </safe:platform>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="standAloneProductInformation" category="DMD" classification="DESCRIPTION">
+      <metadataWrap mimeType="text/xml" textInfo="Stand Alone Product Information" vocabularyName="SAFE">
+        <xmlData>
+          <s1auxsar:standAloneProductInformation>
+            <s1auxsar:auxProductType>AUX_PP2</s1auxsar:auxProductType>
+            <s1auxsar:validity>2019-02-28T09:25:00.000000</s1auxsar:validity>
+            <s1auxsar:generation>2019-02-27T10:51:49.000000</s1auxsar:generation>
+            <s1auxsar:instrumentConfigurationId>7</s1auxsar:instrumentConfigurationId>
+            <s1auxsar:changeDescription><![CDATA[Description:
+Circulation of AUX_PP2 to be compliant with the new instrument configuration RDB#7 (same content as previously). 
+The new antenna configuration related to RDB#7 is affecting only the WV mode, there is no impact on SM/IW/EW modes.
+No specific update was performed on the current processing parameters present in the AUX_PP2 compared to the previous one. 
+
+Three new fields (activateNoiseCorrection (on OWI), activateTotalHs (on OSW), activateGroupDir (on OSW)) have been introduced to prepare future evolution of the processor. Currently, all these fields are set to false (desactivating these future functionnalities). 
+
+The Instrument Configuration ID is changing from 6 to 7.
+
+References:
+RDBADF-97, MPCS-1930]]></s1auxsar:changeDescription>
+          </s1auxsar:standAloneProductInformation>
+        </xmlData>
+      </metadataWrap>
+    </metadataObject>
+    <metadataObject ID="auxSchema" category="REP" classification="SYNTAX">
+      <metadataReference href="./support/s1-aux-pp2.xsd" locatorType="URL" mimeType="text/xml" />
+    </metadataObject>
+    <metadataObject ID="s1ObjectTypesSchema" category="REP" classification="SYNTAX">
+      <metadataReference href="./support/s1-object-types.xsd" locatorType="URL" mimeType="text/xml" />
+    </metadataObject>
+  </metadataSection>
+  <dataObjectSection>
+    <dataObject ID="auxData" repID="auxSchema">
+      <byteStream mimeType="text/xml" size="8179">
+        <fileLocation href="./data/s1a-aux-pp2.xml" locatorType="URL" />
+        <checksum checksumName="MD5">d4c09b2d1fcf6f299cdd321d7c9ef89f</checksum>
+      </byteStream>
+    </dataObject>
+  </dataObjectSection>
+</xfdu:XFDU>

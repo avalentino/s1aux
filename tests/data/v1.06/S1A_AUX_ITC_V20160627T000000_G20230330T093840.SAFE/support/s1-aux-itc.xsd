@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.6">
+  <xsd:include schemaLocation="s1-object-types.xsd"/>
+  <xsd:complexType name="instrumentTimingCalibrationOffsetType">
+    <xsd:annotation>
+      <xsd:documentation>Channel dependent instrument timing calibration offest parameters for the SETAP product.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="swath" type="swathType">
+        <xsd:annotation>
+          <xsd:documentation>Canonical name of the swath to which this set of internal calibration parameters applies. The swath and polarisation are used to index the applicable internalCalibrationParams record. </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="polarisation" type="polarisationType">
+        <xsd:annotation>
+          <xsd:documentation>Polarisation to which this set of internal calibration parameters applies. The polarisation along with the swathNumber are used to index the applicable internalCalibrationParams record.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="rangeOffset">
+        <xsd:annotation>
+          <xsd:documentation>SETAP range offset calibration for given swath and polarisation[s].</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:double">
+              <xsd:attribute name="unit" type="xsd:string" use="required" fixed="s"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>        
+      </xsd:element>
+      <xsd:element name="azimuthOffset">
+        <xsd:annotation>
+          <xsd:documentation>SETAP azimuth offset calibration for given swath and polarisation[s].</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:double">
+              <xsd:attribute name="unit" type="xsd:string" use="required" fixed="s"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>        
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="instrumentTimingCalibrationOffsetListType">
+    <xsd:annotation>
+      <xsd:documentation>Timing calibration offset parameters list for the SETAP processor. This element contains a list of swath/polarisation channel dependent instrument offset parameters with respect to the reference calibration. There is an entry for each swath/polarisation combination for a total of 56. The SPPDU document defines an additional 68 swath number codes that can be used if required.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="instrumentTimingCalibrationOffset" type="instrumentTimingCalibrationOffsetType" maxOccurs="56">
+        <xsd:annotation>
+          <xsd:documentation>Instrument timing calibration parameters. This record contains swath/polarisation channel dependent parameters related to the instrument. There may be up to one record per swath (23 nominal swaths) per polarisation (4 polarisation combinations for SM, IW, EW) for a maximum total of 56.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="count" type="unsignedInt" use="required">
+      <xsd:annotation>
+        <xsd:documentation>Number of internalCalibrationParam records in the list.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="instrumentTimingCalibrationReferenceType">
+    <xsd:annotation>
+      <xsd:documentation>Timing calibration reference parameters SETAP processor. This element contains the range and azimuth instrument reference calibration parameters.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="rangeCalibration">
+        <xsd:annotation>
+          <xsd:documentation>SETAP range reference calibration[s].</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:double">
+              <xsd:attribute name="unit" type="xsd:string" use="required" fixed="s"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>        
+      </xsd:element>
+      <xsd:element name="azimuthCalibration">
+        <xsd:annotation>
+          <xsd:documentation>SETAP azimuth reference calibration[s].</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:double">
+              <xsd:attribute name="unit" type="xsd:string" use="required" fixed="s"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>        
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="auxiliarySetapType">
+    <xsd:annotation>
+      <xsd:documentation>Root element</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="instrumentTimingCalibrationReference" type="instrumentTimingCalibrationReferenceType"/>
+      <xsd:element name="instrumentTimingCalibrationOffsetList" type="instrumentTimingCalibrationOffsetListType"/>
+    </xsd:sequence>
+    <xsd:attribute name="schemaVersion" type="xsd:decimal" use="required" fixed="1.6"/>
+  </xsd:complexType>
+  <xsd:element name="auxiliarySetap" type="auxiliarySetapType">
+    <xsd:annotation>
+      <xsd:documentation>SETAP auxiliary file definition (AUX_ITC).  This file includes information related to the instrument timing calibration.  It is annotated to the S1 ETAD product.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+</xsd:schema>

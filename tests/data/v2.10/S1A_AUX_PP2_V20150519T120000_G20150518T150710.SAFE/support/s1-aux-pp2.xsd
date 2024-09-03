@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: s1-aux-pp2.xsd 8756 2012-07-30 20:13:02Z rbarstow@DS.MDA.CA $ -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="2.10">
+   <xsd:include schemaLocation="s1-object-types.xsd"/>
+   <!--
+      ========================================================================
+      Level 2 AUX_PP2 Definitions.
+      ========================================================================
+   -->
+   <xsd:complexType name="rvlProcParamsType">
+      <xsd:annotation>
+         <xsd:documentation>RVL component processing parameters record.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="rangeBlockSize" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Size of the Doppler estimation block in the range direction [m].</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="azimuthBlockSize" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Size of the Doppler estimation block in the azimuth direction [m].</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="rangeCellSize" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Size of grid cell interval in range direction [m].</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="azimuthCellSize" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Size of grid cell interval in azimuth direction [m].</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="waveRangeAzimuthParamsType">
+      <xsd:annotation>
+         <xsd:documentation>Range and azimuth auxiliary processing parameters for wave spectra.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence/>
+   </xsd:complexType>
+   <xsd:complexType name="spectralEstimationParamsType">
+      <xsd:annotation>
+         <xsd:documentation>Spectral estimation unit auxiliary parameters record.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="frequencySeparation" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Frequency separation of neighbouring looks [Hz].</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="rangeLookFilterWidth" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Range look filter width [Hz].</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="azimuthLookFilterWidth" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Azimuth look filter width [Hz].</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="numberOfLooks" type="unsignedInt">
+            <xsd:annotation>
+               <xsd:documentation>Number of individual looks.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="numRangePixels" type="unsignedInt">
+            <xsd:annotation>
+               <xsd:documentation>Number of range pixels from input L1 product to be used in the estimation of the OSW [pixels].  Only used for SM, for WV all range pixels are used.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="numAzimuthPixels" type="unsignedInt">
+            <xsd:annotation>
+               <xsd:documentation>Number of azimuth pixels from input L1 product to be used in the estimation of the OSW [pixels].  Only used for SM, for WV all azimuth pixels are used.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="spectralInversionParamsType">
+      <xsd:annotation>
+         <xsd:documentation>Spectral inversion unit auxiliary parameters record.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="shortestWavelength" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Shortest wavelength of output polar grid [m].</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="longestWavelength" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Longest wavelength of output polar grid [m].</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="waveNumberBins" type="unsignedInt">
+            <xsd:annotation>
+               <xsd:documentation>Number of wavenumber bins in polar grid.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="directionalBins" type="unsignedInt">
+            <xsd:annotation>
+               <xsd:documentation>Number of directional bins in polar grid.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="owiProcParamsType">
+      <xsd:annotation>
+         <xsd:documentation>OWI processing auxiliary parameters record.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="rangeCellSize" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Size of the SAR derived wind field in the range direction [m]. Wind cells should typically be square therefore nominally rangeCellSize = azimuthCellSize.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="azimuthCellSize" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Size of the SAR derived wind field in the azimuth direction [m]. Wind cells should typically be square therefore nominally azimuthCellSize = rangeCellSize.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="distanceToShore" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Distance to shore where the processing is not performed [Km].</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="windSpeedStdDev" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Standard deviation error of the wind speed provided by ancillary wind information [m/s].</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="windDirStdDev" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Standard deviation error of the wind direction provided by ancillary wind information [degrees].</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="gmfIndex" type="string">
+            <xsd:annotation>
+               <xsd:documentation>Name of the Geophysical Model Function (GMF) to be used for the wind inversion (used for VV polarisation data).</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="prIndex" type="string">
+            <xsd:annotation>
+               <xsd:documentation>Name of the Polarisation Ratio Function to be used for the wind inversion (used for HH polarisation data).  This function converts HH NRCS into VV NRCS before applying the GMF to retrieve the wind. </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="inversionQualityThreshold" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Value above which minimization in the inversion is considered low quality.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="calibrationQualityThreshold" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Value above which the calibration of the product is considered to be incorrect.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="nrcsQualityThreshold" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Value above which the NRCS estimated at the SAR wind cell resolution is considered as low quality.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="brightTargetPfa" type="double">
+            <xsd:annotation>
+               <xsd:documentation>Probability of false alarm for the removal of bright target.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="oswProcParamsType">
+      <xsd:annotation>
+         <xsd:documentation>OSW processing auxiliary parameters record.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="spectralEstimationParams" type="spectralEstimationParamsType">
+            <xsd:annotation>
+               <xsd:documentation>This record contains the auxiliary parameters required for OSW spectral estimation.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="spectralInversionParams" type="spectralInversionParamsType">
+            <xsd:annotation>
+               <xsd:documentation>This record contains the auxiliary parameters required for OSW spectral inversion.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="ocnProcParamsType">
+      <xsd:annotation>
+         <xsd:documentation>OCN processing auxiliary parameters record.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="oswProcParams" type="oswProcParamsType">
+            <xsd:annotation>
+               <xsd:documentation>OSW component processor parameters.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="owiProcParams" type="owiProcParamsType">
+            <xsd:annotation>
+               <xsd:documentation>OWI component processor parameters.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="rvlProcParams" type="rvlProcParamsType">
+            <xsd:annotation>
+               <xsd:documentation>RVL component processor parameters.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="l2ProductType">
+      <xsd:annotation>
+         <xsd:documentation>Standard L2 product record that holds the all the applicable auxiliary data for this product type.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="productId" type="string">
+            <xsd:annotation>
+               <xsd:documentation>L2 Product type identifier as per External ICD to which this set of parameters applies. The productId is used to index and find the correct set of auxiliary parameters for each standard L2 product the IPF is capable of generating.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="ocnProcParams" type="ocnProcParamsType">
+            <xsd:annotation>
+               <xsd:documentation>OCN processing auxiliary parameters. This record contains the auxiliary parameters required during OSW, OWI, and RVL processing. This record is only present for products that require OCN processing.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="l2ProductListType">
+      <xsd:annotation>
+         <xsd:documentation>Auxiliary parameters list for standard L2 products.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="product" type="l2ProductType" maxOccurs="10">
+            <xsd:annotation>
+               <xsd:documentation>Product auxiliary parameters. This DSR contains all of the auxiliary parameters required to process a single product. The parameters are stored in structures that are grouped together by the logical processing steps used during image creation. This DSR contains the productId element which is used to identify the product that this set of parameters applies to. The parameters within this DSR and its children are not polarisation dependent and in generally apply to the entire product.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="count" type="xsd:unsignedInt" use="required">
+         <xsd:annotation>
+            <xsd:documentation>The number of elements contained in the list. There is an entry for each standard L2 product type that the IPF is capable of generating.</xsd:documentation>
+         </xsd:annotation>
+      </xsd:attribute>
+   </xsd:complexType>
+   <xsd:complexType name="l2AuxiliaryProcessorParametersType">
+      <xsd:annotation>
+         <xsd:documentation>Sentinel-1 IPF L2 processing parameters auxiliary file specification.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="productList" type="l2ProductListType">
+            <xsd:annotation>
+               <xsd:documentation>List of L2 standard products containing the applicable auxiliary parameters for each. This list contains an entry for each product the IPF is capable of generating, indexed by its unique product identifier. </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="schemaVersion" type="xsd:decimal" use="required" fixed="2.10"/>
+   </xsd:complexType>
+   <xsd:element name="l2AuxiliaryProcessorParameters" type="l2AuxiliaryProcessorParametersType">
+      <xsd:annotation>
+         <xsd:documentation>L2 Processor parameters auxiliary file definition (AUX_PP2).</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+</xsd:schema>
