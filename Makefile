@@ -41,11 +41,11 @@ coverage:
 	$(PYTHON) -m pytest --cov=$(TARGET) --cov-report=html --cov-report=term
 
 lint:
-	$(PYTHON) -m flake8 --count --statistics $(TARGET) tools/*.py
-	$(PYTHON) -m isort --check $(TARGET) tools/*.py
-	$(PYTHON) -m black --check $(TARGET) tools/*.py
-	$(PYTHON) -m mypy --check-untyped-defs --ignore-missing-imports $(TARGET) tools/*.py
-	# ruff check $(TARGET) tools/*.py
+	$(PYTHON) -m flake8 --count --statistics $(TARGET) tools/*.py tests
+	$(PYTHON) -m isort --check $(TARGET) tools/*.py tests
+	$(PYTHON) -m black --check $(TARGET) tools/*.py tests
+	$(PYTHON) -m mypy --check-untyped-defs --ignore-missing-imports $(TARGET) tools/*.py tests
+	# ruff check $(TARGET) tools/*.py tests
 
 api:
 	$(RM) -r docs/api

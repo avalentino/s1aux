@@ -47,7 +47,7 @@ version = {attr = "s1aux.__version__"}
 [tool.black]
 line-length = 79
 # target-version = ['py311']
-extend-exclude = "s1aux/parse/*"
+extend-exclude = "s1aux/parse/v.*"
 
 
 [tool.isort]
