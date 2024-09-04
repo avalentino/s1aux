@@ -36,8 +36,9 @@ Changelog = "https://github.com/avalentino/s1aux/blob/main/NEWS.rst"
 Issues = "https://github.com/avalentino/s1aux/issues"
 
 
-[tool.setuptools]
-packages = ["s1aux", "s1aux.parse"]
+[tool.setuptools.packages.find]
+namespaces = false
+exclude = ["tests"]
 
 
 [tool.setuptools.dynamic]
