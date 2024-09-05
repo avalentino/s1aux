@@ -10,8 +10,8 @@ authors = [
 ]
 description = "Tools and utilities for Sentinel-1 auxiliary products."
 readme = {file = "README.rst", content-type = "text/x-rst"}
-requires-python = ">=3.8"
-keywords = ["satellite", "sentinel-1", "esa"]
+requires-python = ">=3.9"
+keywords = ["satellite", "sentinel-1", "esa", "sar", "sar-mpc"]
 license = {text = "Apache-2.0"}
 classifiers = [
     "Development Status :: 4 - Beta",
