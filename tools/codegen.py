@@ -11,6 +11,7 @@ import logging
 import pathlib
 import argparse
 import warnings
+import functools
 import itertools
 import subprocess
 import collections
@@ -27,23 +28,6 @@ except ImportError:
     EX_OK = 0
 EX_FAILURE = 1
 EX_INTERRUPT = 130
-
-
-SAR_MPC_API_URL = "https://sar-mpc.eu/api/v1"
-DEFAULT_QUERY_PARAMS = {
-    "product_type__in": "AUX_PP1,AUX_CAL,AUX_INS,AUX_PP2,AUX_SCF,AUX_ITC",
-    # AUX_SCS,AUX_ML2
-    "sentinel1__mission": "S1A",
-    "sentinel1__instr_conf_id": "7",
-    "adf__active": "true",
-    # "mode": "extended",
-}
-FULL_QUERY_PARAMS = {
-    "product_type__in": "AUX_PP1,AUX_CAL,AUX_INS,AUX_PP2,AUX_SCF,AUX_ITC",
-    # AUX_SCS,AUX_ML2
-    # "sentinel1__mission": "S1A",
-    # "mode": "extended",
-}
 
 
 PathType = str | os.PathLike[str]
@@ -63,76 +47,116 @@ class ELayout(enum.Enum):
         return self.name
 
 
-def query_url(url: str = SAR_MPC_API_URL, **kwargs: str) -> str:
-    """Build the query for Sentinel-1 auxiliary products."""
-    if len(kwargs) > 0:
-        return f"{url}?{urlencode(kwargs)}"
-    else:
-        return url
+class SarMpcApiClient:
+    SAR_MPC_API_URL = "https://sar-mpc.eu/api/v1"
+    DEFAULT_QUERY_PARAMS = {
+        "product_type__in": "AUX_PP1,AUX_CAL,AUX_INS,AUX_PP2,AUX_SCF,AUX_ITC",
+        # AUX_SCS,AUX_ML2
+        "sentinel1__mission": "S1A",
+        "sentinel1__instr_conf_id": "7",
+        "adf__active": "true",
+        # "mode": "extended",
+    }
+    FULL_QUERY_PARAMS = {
+        "product_type__in": "AUX_PP1,AUX_CAL,AUX_INS,AUX_PP2,AUX_SCF,AUX_ITC",
+        # AUX_SCS,AUX_ML2
+        # "sentinel1__mission": "S1A",
+        # "mode": "extended",
+    }
 
-
-def _download(url: str, outfile: Optional[PathType] = None) -> pathlib.Path:
-    if outfile is None:
-        outfile = pathlib.Path(urlparse(url).path).name
-    outfile = pathlib.Path(outfile)
-    response = requests.get(url)
-    response.raise_for_status()
-    outfile.parent.mkdir(parents=True, exist_ok=True)
-    outfile.write_bytes(response.content)
-    return outfile
-
-
-def _iter_pages(url):
-    response = requests.get(url)
-    response.raise_for_status()
-
-    page_data = response.json()
-    while page_data:
-        yield page_data
-        next_ = page_data.get("next")
-        if next_:
-            response = requests.get(next_)
-            response.raise_for_status()
-            page_data = response.json()
+    @classmethod
+    def query_url(cls, **kwargs: str) -> str:
+        """Build the query for Sentinel-1 auxiliary products."""
+        url = kwargs.pop("api_url", cls.SAR_MPC_API_URL)
+        if len(kwargs) > 0:
+            return f"{url}?{urlencode(kwargs)}"
         else:
-            page_data = None
+            return url
 
-
-def download_archive_metadata(
-    query_params: dict[str, str] = DEFAULT_QUERY_PARAMS,
-):
-    """Download metadata of requested products from the archive."""
-    query = query_url(**query_params)
-    archive_json: dict[str, list] = {"results": []}
-    for page, page_data in enumerate(_iter_pages(query)):
-        _log.debug(
-            "page: %s, count: %d, next: %s",
-            page,
-            page_data["count"],
-            page_data["next"],
+    def __init__(self, session: Optional[requests.Session] = None):
+        if session is None:
+            session = requests.Session()
+            close_session = True
+        else:
+            close_session = False
+        self._session: requests.Session = session
+        self._close_session: bool = close_session
+        self._log = logging.getLogger(
+            f"{self.__class__.__module__}.{self._class__.__qualname__}"
         )
-        archive_json["results"].extend(page_data["results"])
-    return archive_json
 
+    def __enter__(self):
+        return self
 
-def download_aux_products(
-    datadir: PathType = "data",
-    query_params: dict[str, str] = DEFAULT_QUERY_PARAMS,
-) -> pathlib.Path:
-    """Download a base set of auxiliary products."""
-    _log.info("query the archive")
-    archive_data = download_archive_metadata(query_params=query_params)
+    def __exit__(self, exc_type=None, exc_value=None, traceback=None):
+        if self._close_session:
+            self._session.close()
 
-    _log.info("download products")
-    datadir = pathlib.Path(datadir)
-    for product in tqdm.tqdm(archive_data["results"], unit="products"):
-        url = product["remote_url"]
-        outfile = datadir.joinpath(product["physical_name"])
-        if not outfile.exists():
-            _download(url, outfile=outfile)
-            shutil.unpack_archive(outfile, extract_dir=outfile.parent)
+    def _download(
+        self, url: str, outfile: Optional[PathType] = None
+    ) -> pathlib.Path:
+        if outfile is None:
+            outfile = pathlib.Path(urlparse(url).path).name
+        outfile = pathlib.Path(outfile)
+        response = self._session.get(url)
+        response.raise_for_status()
+        outfile.parent.mkdir(parents=True, exist_ok=True)
+        outfile.write_bytes(response.content)
+        return outfile
 
-    return datadir
+    def _iter_pages(self, url: str):
+        response = self._session.get(url)
+        response.raise_for_status()
+
+        page_data = response.json()
+        while page_data:
+            yield page_data
+            next_ = page_data.get("next")
+            if next_:
+                response = self._session.get(next_)
+                response.raise_for_status()
+                page_data = response.json()
+            else:
+                page_data = None
+
+    @functools.lru_cache(maxsize=16)
+    def get_archive_metadata(
+        self, query_url: Optional[str] = None
+    ) -> dict[str, list[str]]:
+        """Download metadata of requested products from the archive."""
+        if query_url is None:
+            query_url = self.query_url(**self.DEFAULT_QUERY_PARAMS)
+        archive_json: dict[str, list[str]] = {"results": []}
+        for page, page_data in enumerate(self._iter_pages(query_url)):
+            self._log.debug(
+                "page: %s, count: %d, next: %s",
+                page,
+                page_data["count"],
+                page_data["next"],
+            )
+            archive_json["results"].extend(page_data["results"])
+        return archive_json
+
+    def download_aux_products(
+        self,
+        *,
+        query_url: Optional[str] = None, 
+        datadir: PathType = "data",
+    ) -> pathlib.Path:
+        """Download a base set of auxiliary products."""
+        self._log.info("query the archive")
+        archive_data = self.get_archive_metadata(query_url=query_url)
+
+        self._log.info("download products")
+        datadir = pathlib.Path(datadir)
+        for product in tqdm.tqdm(archive_data["results"], unit="products"):
+            url = product["remote_url"]
+            outfile = datadir.joinpath(product["physical_name"])
+            if not outfile.exists():
+                self._download(url, outfile=outfile)
+                shutil.unpack_archive(outfile, extract_dir=outfile.parent)
+
+        return datadir
 
 
 def get_spec_version(product_dir: PathType) -> str | None:
@@ -566,12 +590,14 @@ def main(*argv):
         quiet: bool = bool(getattr(logging, args.loglevel) < logging.INFO)
 
         if args.layout is ELayout.FLAT:
-            query_params = DEFAULT_QUERY_PARAMS
+            query_params = SarMpcApiClient.DEFAULT_QUERY_PARAMS
         else:
-            query_params = FULL_QUERY_PARAMS
+            query_params = SarMpcApiClient.FULL_QUERY_PARAMS
 
-        datadir = download_aux_products(
-            args.datadir, query_params=query_params
+        client = SarMpcApiClient()
+        query_url = client.query_url(**query_params)
+        datadir = client.download_aux_products(
+            query_url=query_url, datadir=args.datadir
         )
         xsd_dir = make_xds_dir(
             datadir, args.xsd_dir, layout=args.layout, strict=args.strict
