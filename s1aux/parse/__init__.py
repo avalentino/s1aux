@@ -55,8 +55,8 @@ def get_product_type(name: str) -> EProductType:
         mobj = _AUX_DATAFILE_RE.match(name)
         if not mobj:
             raise ValueError(
-                f"{name!r} is not a valid name for Sentinel-1 auxiliary "
-                f"products of datafile"
+                f"{name!r} is not a valid name for datafiles of Sentinel-1 "
+                "auxiliary products"
             )
         return EProductType(mobj.group("product_type").upper())
     return EProductType(mobj.group("product_type"))
