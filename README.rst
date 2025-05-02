@@ -21,7 +21,7 @@ data distributed by the ESA SAR Mission Performance Cluster (SAR-MPC_).
 License
 -------
 
-Copyright (c) 2024 Antonio Valentino
+Copyright (c) 2024-2025 Antonio Valentino
 
 The `s1aux` package is distributed under the Apache-2.0 License
 (see the `LICENSE` file).
