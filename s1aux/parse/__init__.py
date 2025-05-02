@@ -9,7 +9,6 @@ import importlib
 from xsdata.exceptions import ParserError
 from xsdata.formats.dataclass.parsers import XmlParser
 
-
 _AUX_PRODUCT_RE = re.compile(
     r"(?P<mission_id>S1[ABCD_])_"
     r"AUX_"
@@ -84,7 +83,7 @@ def load(path):
     except KeyError:
         raise NotImplementedError(
             f"Loading of {product_type.name!r} products is still "
-            f"not implemented"
+            "not implemented"
         ) from None
 
     for version in _get_available_spec_versions():

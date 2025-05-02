@@ -14,8 +14,7 @@ import warnings
 import itertools
 import subprocess
 import collections
-from typing import Optional
-from xml.etree import ElementTree as etree  # noqa: N813,ICN001
+from xml.etree import ElementTree as etree  # noqa: N813
 from urllib.parse import urlencode, urlparse
 
 import tqdm
@@ -71,7 +70,7 @@ def query_url(url: str = SAR_MPC_API_URL, **kwargs: str) -> str:
         return url
 
 
-def _download(url: str, outfile: Optional[PathType] = None) -> pathlib.Path:
+def _download(url: str, outfile: PathType | None = None) -> pathlib.Path:
     if outfile is None:
         outfile = pathlib.Path(urlparse(url).path).name
     outfile = pathlib.Path(outfile)
@@ -163,7 +162,7 @@ class _EChange(enum.IntFlag):
 def _detect_changes(left: str, right: str) -> _EChange:
     changed = _EChange.NOCHANGE
     for line in difflib.unified_diff(left.splitlines(), right.splitlines()):
-        if line.startswith("---") or line.startswith("+++"):
+        if line.startswith(("---", "+++")):
             continue
 
         c = line[0]
@@ -200,7 +199,7 @@ def _process_xsd(
         if left_data != right_data:
             msg = (
                 f"source ('{path}') and target ('{dst}') files "
-                f"have different content."
+                "have different content."
             )
             if strict:
                 raise FileExistsError(msg)
@@ -237,7 +236,7 @@ def make_xds_dir(
         spec_version = get_spec_version(product_dir)
         if spec_version is None:
             warnings.warn(
-                f"Unable to retrieve the specification version for "
+                "Unable to retrieve the specification version for "
                 f"'{product_dir.name}', skip.",
                 stacklevel=1,
             )
@@ -408,7 +407,7 @@ LOGFMT = "%(asctime)s %(levelname)-8s -- %(message)s"
 DEFAULT_LOGLEVEL = "WARNING"
 
 
-def _autocomplete(parser):
+def _autocomplete(parser: argparse.ArgumentParser) -> None:
     try:
         import argcomplete
     except ImportError:
@@ -417,7 +416,9 @@ def _autocomplete(parser):
         argcomplete.autocomplete(parser)
 
 
-def _add_logging_control_args(parser, default_loglevel=DEFAULT_LOGLEVEL):
+def _add_logging_control_args(
+    parser: argparse.ArgumentParser, default_loglevel: str = DEFAULT_LOGLEVEL
+) -> argparse.ArgumentParser:
     """Add command line options for logging control."""
     loglevels = [logging.getLevelName(level) for level in range(10, 60, 10)]
 
@@ -433,8 +434,10 @@ def _add_logging_control_args(parser, default_loglevel=DEFAULT_LOGLEVEL):
         dest="loglevel",
         action="store_const",
         const="ERROR",
-        help="suppress standard output messages, "
-        "only errors are printed to screen",
+        help=(
+            "suppress standard output messages, "
+            "only errors are printed to screen (set 'loglevel' to 'ERROR')"
+        ),
     )
     parser.add_argument(
         "-v",
@@ -442,7 +445,7 @@ def _add_logging_control_args(parser, default_loglevel=DEFAULT_LOGLEVEL):
         dest="loglevel",
         action="store_const",
         const="INFO",
-        help="print verbose output messages",
+        help="print verbose output messages (set 'loglevel' to 'INFO')",
     )
     parser.add_argument(
         "-d",
@@ -450,11 +453,13 @@ def _add_logging_control_args(parser, default_loglevel=DEFAULT_LOGLEVEL):
         dest="loglevel",
         action="store_const",
         const="DEBUG",
-        help="print debug messages",
+        help="print debug messages (set 'loglevel' to 'DEBUG')",
     )
 
+    return parser
 
-def get_parser(subparsers=None):
+
+def get_parser(subparsers=None) -> argparse.ArgumentParser:
     """Instantiate the command line argument (sub-)parser."""
     name = PROG  # or 'subcommand-name'
     synopsis = __doc__.splitlines()[0]
@@ -470,9 +475,9 @@ def get_parser(subparsers=None):
         parser = subparsers.add_parser(name, description=doc, help=synopsis)
         # parser.set_defaults(func=info)
 
+    # Command line options
     _add_logging_control_args(parser)
 
-    # Command line options
     parser.add_argument(
         "--datadir",
         default="data",
@@ -486,7 +491,7 @@ def get_parser(subparsers=None):
         "--xsd-dir",
         default="xsd",
         help=(
-            "path to the direcotory where XSD files are stored "
+            "path to the directory where XSD files are stored "
             "(default: '%(default)s')"
         ),
     )
@@ -498,8 +503,8 @@ def get_parser(subparsers=None):
         default=ELayout.NESTED,
         help=(
             "layout for the generated package: "
-            "FLAT puts all the denerated modules in the target package, "
-            "NESTED creates a sub-packages hyerarchy according to the "
+            "FLAT puts all the generated modules in the target package, "
+            "NESTED creates a sub-packages hierarchy according to the "
             "format specification version. Default: '%(default)s'"
         ),
     )
@@ -550,7 +555,8 @@ def parse_args(args=None, namespace=None, parser=None):
 
 def main(*argv):
     """Implement the main CLI interface."""
-    logging.basicConfig(format="%(levelname)s: %(message)s")
+    # setup logging
+    logging.basicConfig(format=LOGFMT, level=DEFAULT_LOGLEVEL)
     logging.captureWarnings(True)
     log = logging.getLogger(__name__)
 
@@ -584,7 +590,7 @@ def main(*argv):
             quiet=quiet,
         )
         log.info("%s package generated in '%s'", args.package_name, outdir)
-    except Exception as exc:  # noqa: B902 BLE001
+    except Exception as exc:
         log.critical(
             "unexpected exception caught: %r %s", type(exc).__name__, exc
         )
