@@ -16,6 +16,7 @@ import subprocess
 import collections
 from xml.etree import ElementTree as etree  # noqa: N813
 from urllib.parse import urlencode, urlparse
+from collections.abc import Iterator
 
 import tqdm
 import requests
@@ -31,17 +32,12 @@ EX_INTERRUPT = 130
 SAR_MPC_API_URL = "https://sar-mpc.eu/api/v1"
 DEFAULT_QUERY_PARAMS = {
     "product_type__in": "AUX_PP1,AUX_CAL,AUX_INS,AUX_PP2,AUX_SCF,AUX_ITC",
-    # AUX_SCS,AUX_ML2
     "sentinel1__mission": "S1A",
     "sentinel1__instr_conf_id": "7",
     "adf__active": "true",
-    # "mode": "extended",
 }
 FULL_QUERY_PARAMS = {
     "product_type__in": "AUX_PP1,AUX_CAL,AUX_INS,AUX_PP2,AUX_SCF,AUX_ITC",
-    # AUX_SCS,AUX_ML2
-    # "sentinel1__mission": "S1A",
-    # "mode": "extended",
 }
 
 
@@ -58,7 +54,7 @@ class ELayout(enum.Enum):
     FLAT = "flat"
     NESTED = "nested"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -66,8 +62,7 @@ def query_url(url: str = SAR_MPC_API_URL, **kwargs: str) -> str:
     """Build the query for Sentinel-1 auxiliary products."""
     if len(kwargs) > 0:
         return f"{url}?{urlencode(kwargs)}"
-    else:
-        return url
+    return url
 
 
 def _download(url: str, outfile: PathType | None = None) -> pathlib.Path:
@@ -81,7 +76,7 @@ def _download(url: str, outfile: PathType | None = None) -> pathlib.Path:
     return outfile
 
 
-def _iter_pages(url):
+def _iter_pages(url: str) -> Iterator[dict]:
     response = requests.get(url)
     response.raise_for_status()
 
@@ -99,7 +94,7 @@ def _iter_pages(url):
 
 def download_archive_metadata(
     query_params: dict[str, str] = DEFAULT_QUERY_PARAMS,
-):
+) -> dict[str, list]:
     """Download metadata of requested products from the archive."""
     query = query_url(**query_params)
     archive_json: dict[str, list] = {"results": []}
@@ -147,7 +142,6 @@ def get_spec_version(product_dir: PathType) -> str | None:
     except StopIteration:
         msg = f"No AUX XSD found in '{product_dir}'"
         warnings.warn(msg, stacklevel=2)  # TODO: check
-        # raise FileNotFoundError(msg) from None
         return None
 
     return etree.parse(xsdfile).getroot().attrib.get("version")
@@ -165,10 +159,10 @@ def _detect_changes(left: str, right: str) -> _EChange:
         if line.startswith(("---", "+++")):
             continue
 
-        c = line[0]
-        if c == "-":
+        change_marker = line[0]
+        if change_marker == "-":
             changed |= _EChange.LEFT
-        elif c == "+":
+        elif change_marker == "+":
             changed |= _EChange.RIGHT
 
     return changed
@@ -176,7 +170,7 @@ def _detect_changes(left: str, right: str) -> _EChange:
 
 def _normalized_spec_version(
     spec_version: str, sep: str = ".", fallback: str = "v_.__"
-):
+) -> str:
     try:
         major, minor = (int(item) for item in spec_version.split("."))
     except ValueError:
@@ -240,7 +234,6 @@ def make_xds_dir(
                 f"'{product_dir.name}', skip.",
                 stacklevel=1,
             )
-            # spec_version = None
             gdate = product_dir.stem[29:38]
             unversioned[gdate].append(product_dir)
             continue
@@ -308,12 +301,17 @@ def make_cmd(
     if config_file.exists():
         cmd.extend(["-c", os.fspath(config_file)])
     else:
-        default_cmd_args = (
-            "--relative-imports --include-header "
-            "--frozen --slots --kw-only "
-            "-ds NumPy "
-            "-ss filenames"
-        ).split()
+        default_cmd_args = [
+            "--relative-imports",
+            "--include-header",
+            "--frozen",
+            "--slots",
+            "--kw-only",
+            "-ds",
+            "NumPy",
+            "-ss",
+            "filenames",
+        ]
         cmd.extend(default_cmd_args)
     cmd.extend(["-p", package_name])
     cmd.append(os.fspath(xsd_dir))
@@ -366,11 +364,27 @@ def generate_s1aux_package(
             overwrite=overwrite,
             quiet=quiet,
         )
-    else:
-        for versioned_xsd_dir in xsd_dir.glob("v[0-9].*"):
+
+    for versioned_xsd_dir in xsd_dir.glob("v[0-9].*"):
+        _log.info("versioned_xsd_dir: %s", versioned_xsd_dir)
+
+        normalized_version = versioned_xsd_dir.name.replace(".", "_")
+        versioned_package_name = f"{package_name}.{normalized_version}"
+        _log.info("package_name: %s", versioned_package_name)
+
+        generate_s1aux_package_core(
+            versioned_xsd_dir,
+            versioned_package_name,
+            config_file=config_file,
+            overwrite=overwrite,
+            quiet=quiet,
+        )
+
+    if PROCESS_UNVERSIONED:
+        for versioned_xsd_dir in xsd_dir.glob("G*"):
             _log.info("versioned_xsd_dir: %s", versioned_xsd_dir)
 
-            normalized_version = versioned_xsd_dir.name.replace(".", "_")
+            normalized_version = str(versioned_xsd_dir)
             versioned_package_name = f"{package_name}.{normalized_version}"
             _log.info("package_name: %s", versioned_package_name)
 
@@ -382,23 +396,7 @@ def generate_s1aux_package(
                 quiet=quiet,
             )
 
-        if PROCESS_UNVERSIONED:
-            for versioned_xsd_dir in xsd_dir.glob("G*"):
-                _log.info("versioned_xsd_dir: %s", versioned_xsd_dir)
-
-                normalized_version = str(versioned_xsd_dir)
-                versioned_package_name = f"{package_name}.{normalized_version}"
-                _log.info("package_name: %s", versioned_package_name)
-
-                generate_s1aux_package_core(
-                    versioned_xsd_dir,
-                    versioned_package_name,
-                    config_file=config_file,
-                    overwrite=overwrite,
-                    quiet=quiet,
-                )
-
-        return package_name
+    return package_name
 
 
 __version__ = "1.0"
@@ -459,21 +457,12 @@ def _add_logging_control_args(
     return parser
 
 
-def get_parser(subparsers=None) -> argparse.ArgumentParser:
+def get_parser() -> argparse.ArgumentParser:
     """Instantiate the command line argument (sub-)parser."""
-    name = PROG  # or 'subcommand-name'
-    synopsis = __doc__.splitlines()[0]
-
-    doc = __doc__
-
-    if subparsers is None:
-        parser = argparse.ArgumentParser(prog=name, description=doc)
-        parser.add_argument(
-            "--version", action="version", version="%(prog)s v" + __version__
-        )
-    else:
-        parser = subparsers.add_parser(name, description=doc, help=synopsis)
-        # parser.set_defaults(func=info)
+    parser = argparse.ArgumentParser(prog=PROG, description=__doc__)
+    parser.add_argument(
+        "--version", action="version", version="%(prog)s v" + __version__
+    )
 
     # Command line options
     _add_logging_control_args(parser)
@@ -486,7 +475,7 @@ def get_parser(subparsers=None) -> argparse.ArgumentParser:
             "don't download AUX data from the internet. "
             "If this option is enabled hen the AUX data are expected to "
             "be already in 'datadir'"
-        )
+        ),
     )
     parser.add_argument(
         "--datadir",
@@ -547,23 +536,24 @@ def get_parser(subparsers=None) -> argparse.ArgumentParser:
         help="path to the output Python package (default: '%(default)s')",
     )
 
-    if subparsers is None:
-        _autocomplete(parser)
+    _autocomplete(parser)
 
     return parser
 
 
-def parse_args(args=None, namespace=None, parser=None):
+def parse_args(
+    args: list[str] | None = None,
+    namespace: argparse.Namespace | None = None,
+    parser: argparse.ArgumentParser | None = None,
+) -> argparse.Namespace:
     """Parse command line arguments."""
     if parser is None:
         parser = get_parser()
 
-    args = parser.parse_args(args, namespace)
-
-    return args
+    return parser.parse_args(args, namespace)
 
 
-def main(*argv):
+def main(*argv: str) -> int:
     """Implement the main CLI interface."""
     # setup logging
     logging.basicConfig(format=LOGFMT, level=DEFAULT_LOGLEVEL)
@@ -571,7 +561,7 @@ def main(*argv):
     log = logging.getLogger(__name__)
 
     # parse cmd line arguments
-    args = parse_args(argv if argv else None)
+    args = parse_args(list(argv) if argv else None)
 
     # execute main tasks
     exit_code = EX_OK
@@ -579,7 +569,7 @@ def main(*argv):
         # NOTE: use the root logger to set the logging level
         logging.getLogger().setLevel(args.loglevel)
 
-        quiet: bool = bool(getattr(logging, args.loglevel) < logging.INFO)
+        quiet: bool = getattr(logging, args.loglevel) < logging.INFO
 
         if args.layout is ELayout.FLAT:
             query_params = DEFAULT_QUERY_PARAMS

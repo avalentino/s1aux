@@ -92,7 +92,7 @@ def test_get_product_type(name):
 
 
 def test_get_product_type_error():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Sentinel-1"):
         s1aux.parse.get_product_type("invalid")
 
 

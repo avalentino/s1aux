@@ -96,9 +96,9 @@ def load(path):
         raise S1AuxParseError(f"unable to parse: '{path}'")
 
     root = xmldoc.getroot()
-    assert root.tag.lower() == xml_type_name.lower(), (
-        f"root.tag: {root.tag}, xml_type_name: {xml_type_name}"
-    )
+    assert (
+        root.tag.lower() == xml_type_name.lower()
+    ), f"root.tag: {root.tag}, xml_type_name: {xml_type_name}"
 
     if "schemaVersion" in root.attrib:
         major, minor = root.attrib["schemaVersion"].split(".")
