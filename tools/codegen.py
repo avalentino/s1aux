@@ -479,6 +479,16 @@ def get_parser(subparsers=None) -> argparse.ArgumentParser:
     _add_logging_control_args(parser)
 
     parser.add_argument(
+        "--offline",
+        action="store_true",
+        default=False,
+        help=(
+            "don't download AUX data from the internet. "
+            "If this option is enabled hen the AUX data are expected to "
+            "be already in 'datadir'"
+        )
+    )
+    parser.add_argument(
         "--datadir",
         default="data",
         help=(
@@ -576,9 +586,12 @@ def main(*argv):
         else:
             query_params = FULL_QUERY_PARAMS
 
-        datadir = download_aux_products(
-            args.datadir, query_params=query_params
-        )
+        if args.offline:
+            datadir = args.datadir
+        else:
+            datadir = download_aux_products(
+                args.datadir, query_params=query_params
+            )
         xsd_dir = make_xds_dir(
             datadir, args.xsd_dir, layout=args.layout, strict=args.strict
         )
