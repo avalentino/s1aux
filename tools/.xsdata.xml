@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Config xmlns="http://pypi.org/project/xsdata" version="24.3.1">
-  <Output maxLineLength="79" subscriptableTypes="false" unionType="false">
+<Config xmlns="http://pypi.org/project/xsdata" version="25.4">
+  <Output maxLineLength="79" genericCollections="true" unionType="false">
     <Package>s1aux</Package>
     <Format repr="true" eq="true" order="false" unsafeHash="false" frozen="true" slots="true" kwOnly="true">dataclasses</Format>
     <Structure>filenames</Structure>
     <DocstringStyle>NumPy</DocstringStyle>
     <RelativeImports>true</RelativeImports>
     <CompoundFields defaultName="choice" useSubstitutionGroups="false" forceDefaultName="false" maxNameParts="3">false</CompoundFields>
+    <WrapperFields>false</WrapperFields>
     <PostponedAnnotations>false</PostponedAnnotations>
     <UnnestClasses>false</UnnestClasses>
     <IgnorePatterns>false</IgnorePatterns>
