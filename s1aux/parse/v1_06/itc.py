@@ -1,10 +1,9 @@
-from dataclasses import dataclass, field
 from decimal import Decimal
-from typing import Tuple
+from dataclasses import field, dataclass
 
 from .s1_object_types import (
-    PolarisationType,
     SwathType,
+    PolarisationType,
 )
 
 
@@ -187,7 +186,7 @@ class InstrumentTimingCalibrationOffsetListType:
     class Meta:
         name = "instrumentTimingCalibrationOffsetListType"
 
-    instrument_timing_calibration_offset: Tuple[
+    instrument_timing_calibration_offset: tuple[
         InstrumentTimingCalibrationOffsetType, ...
     ] = field(
         default_factory=tuple,

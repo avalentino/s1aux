@@ -1,28 +1,28 @@
-from dataclasses import dataclass, field
+from typing import Optional
 from decimal import Decimal
-from typing import Optional, Tuple
+from dataclasses import field, dataclass
 
 from .s1_object_types import (
-    BistaticDelayMethodType,
+    Float,
+    Int32,
+    Double,
+    Uint32,
+    SwathType,
+    FloatArray,
+    DcMethodType,
+    PgSourceType,
     ChirpSourceType,
     DcInputDataType,
-    DcMethodType,
-    Double,
-    DoubleCoefficientArray,
-    Float,
-    FloatArray,
-    FloatCoefficientArray,
-    Int32,
+    RrfSpectrumType,
     OutputPixelsType,
-    PgSourceType,
+    WeightingWindowType,
+    FloatCoefficientArray,
+    DoubleCoefficientArray,
+    BistaticDelayMethodType,
     RfimitigationDomainType,
+    TopsFilterConventionType,
     RfimitigationPerformedType,
     RfimitigationTimeDomainCorrMethodType,
-    RrfSpectrumType,
-    SwathType,
-    TopsFilterConventionType,
-    Uint32,
-    WeightingWindowType,
 )
 
 
@@ -904,7 +904,7 @@ class AziProcBlockParamsListType:
     class Meta:
         name = "aziProcBlockParamsListType"
 
-    azi_proc_block_params: Tuple[AziProcBlockParamsType, ...] = field(
+    azi_proc_block_params: tuple[AziProcBlockParamsType, ...] = field(
         default_factory=tuple,
         metadata={
             "name": "aziProcBlockParams",
@@ -944,7 +944,7 @@ class AzimuthParamsListType:
     class Meta:
         name = "azimuthParamsListType"
 
-    azimuth_params: Tuple[AzimuthParamsType, ...] = field(
+    azimuth_params: tuple[AzimuthParamsType, ...] = field(
         default_factory=tuple,
         metadata={
             "name": "azimuthParams",
@@ -1162,7 +1162,7 @@ class RangeParamsListType:
     class Meta:
         name = "rangeParamsListType"
 
-    range_params: Tuple[RangeParamsType, ...] = field(
+    range_params: tuple[RangeParamsType, ...] = field(
         default_factory=tuple,
         metadata={
             "name": "rangeParams",
@@ -1230,7 +1230,7 @@ class ScalingLutListType:
     class Meta:
         name = "scalingLutListType"
 
-    scaling_lut: Tuple[ScalingLutType, ...] = field(
+    scaling_lut: tuple[ScalingLutType, ...] = field(
         default_factory=tuple,
         metadata={
             "name": "scalingLut",
@@ -1267,7 +1267,7 @@ class SlcSwathParamsListType:
     class Meta:
         name = "slcSwathParamsListType"
 
-    swath_params: Tuple[SlcSwathParamsType, ...] = field(
+    swath_params: tuple[SlcSwathParamsType, ...] = field(
         default_factory=tuple,
         metadata={
             "name": "swathParams",
@@ -1761,7 +1761,7 @@ class ApplicationLutListType:
     class Meta:
         name = "applicationLutListType"
 
-    application_lut: Tuple[ApplicationLutType, ...] = field(
+    application_lut: tuple[ApplicationLutType, ...] = field(
         default_factory=tuple,
         metadata={
             "name": "applicationLut",
@@ -1904,7 +1904,7 @@ class L1ProductListType:
     class Meta:
         name = "l1ProductListType"
 
-    product: Tuple[L1ProductType, ...] = field(
+    product: tuple[L1ProductType, ...] = field(
         default_factory=tuple,
         metadata={
             "type": "Element",

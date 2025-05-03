@@ -1,6 +1,5 @@
-from dataclasses import dataclass, field
 from decimal import Decimal
-from typing import Tuple
+from dataclasses import field, dataclass
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -126,7 +125,7 @@ class ListOfModesType:
     class Meta:
         name = "listOfModesType"
 
-    mode: Tuple["ListOfModesType.Mode", ...] = field(
+    mode: tuple["ListOfModesType.Mode", ...] = field(
         default_factory=tuple,
         metadata={
             "type": "Element",

@@ -1,11 +1,10 @@
-from dataclasses import dataclass, field
 from decimal import Decimal
-from typing import Tuple
+from dataclasses import field, dataclass
 
 from .s1_object_types import (
     Double,
-    PolarisationType,
     SwathType,
+    PolarisationType,
 )
 
 
@@ -86,7 +85,7 @@ class InstrumentTimingCalibrationListType:
     class Meta:
         name = "instrumentTimingCalibrationListType"
 
-    instrument_timing_calibration: Tuple[
+    instrument_timing_calibration: tuple[
         InstrumentTimingCalibrationType, ...
     ] = field(
         default_factory=tuple,

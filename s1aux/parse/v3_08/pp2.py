@@ -1,7 +1,7 @@
-from dataclasses import dataclass, field
-from decimal import Decimal
 from enum import Enum
-from typing import Optional, Tuple
+from typing import Optional
+from decimal import Decimal
+from dataclasses import field, dataclass
 
 from .s1_object_types import Double
 
@@ -120,7 +120,7 @@ class OwiProcParamsType:
             "required": True,
         }
     )
-    gmf_index: Tuple["OwiProcParamsType.GmfIndex", ...] = field(
+    gmf_index: tuple["OwiProcParamsType.GmfIndex", ...] = field(
         default_factory=tuple,
         metadata={
             "name": "gmfIndex",
@@ -372,7 +372,7 @@ class SpectralInversionParamsType:
             "max_inclusive": 4294967295,
         }
     )
-    velthresh: Tuple["SpectralInversionParamsType.Velthresh", ...] = field(
+    velthresh: tuple["SpectralInversionParamsType.Velthresh", ...] = field(
         default_factory=tuple,
         metadata={
             "type": "Element",
@@ -435,7 +435,7 @@ class OswProcParamsType:
             "required": True,
         }
     )
-    activate_total_hs: Tuple["OswProcParamsType.ActivateTotalHs", ...] = field(
+    activate_total_hs: tuple["OswProcParamsType.ActivateTotalHs", ...] = field(
         default_factory=tuple,
         metadata={
             "name": "activateTotalHs",
@@ -583,7 +583,7 @@ class L2ProductListType:
     class Meta:
         name = "l2ProductListType"
 
-    product: Tuple[L2ProductType, ...] = field(
+    product: tuple[L2ProductType, ...] = field(
         default_factory=tuple,
         metadata={
             "type": "Element",

@@ -1,6 +1,5 @@
-from dataclasses import dataclass, field
 from decimal import Decimal
-from typing import Tuple
+from dataclasses import field, dataclass
 
 from .s1_object_types import Double
 
@@ -460,7 +459,7 @@ class L2ProductListType:
     class Meta:
         name = "l2ProductListType"
 
-    product: Tuple[L2ProductType, ...] = field(
+    product: tuple[L2ProductType, ...] = field(
         default_factory=tuple,
         metadata={
             "type": "Element",

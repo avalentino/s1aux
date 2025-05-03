@@ -1,6 +1,6 @@
-from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
+from dataclasses import field, dataclass
 
 from xsdata.models.datatype import XmlDateTime
 

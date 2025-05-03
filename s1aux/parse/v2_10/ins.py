@@ -1,26 +1,25 @@
-from dataclasses import dataclass, field
 from decimal import Decimal
-from typing import Tuple
+from dataclasses import field, dataclass
 
 from .s1_object_types import (
-    BandwidthType,
-    BaqCodeType,
-    CalCombinationMethodType,
-    Complex,
-    ComplexArray,
-    Double,
-    DoubleArray,
-    DoubleCoefficientArray,
-    FloatArray,
-    FloatCoefficientArray,
     Int32,
+    Double,
+    Uint32,
+    Complex,
     IntArray,
+    SwathType,
+    FloatArray,
+    SignalType,
+    BaqCodeType,
+    DoubleArray,
+    ComplexArray,
+    BandwidthType,
+    SensorModeType,
     PolarisationType,
     RxPolarisationType,
-    SensorModeType,
-    SignalType,
-    SwathType,
-    Uint32,
+    FloatCoefficientArray,
+    DoubleCoefficientArray,
+    CalCombinationMethodType,
 )
 
 
@@ -517,7 +516,7 @@ class HuffmanLutListType:
     class Meta:
         name = "huffmanLutListType"
 
-    huffman_lut: Tuple[HuffmanLutType, ...] = field(
+    huffman_lut: tuple[HuffmanLutType, ...] = field(
         default_factory=tuple,
         metadata={
             "name": "huffmanLut",
@@ -555,7 +554,7 @@ class IspListType:
     class Meta:
         name = "ispListType"
 
-    isp: Tuple[IspType, ...] = field(
+    isp: tuple[IspType, ...] = field(
         default_factory=tuple,
         metadata={
             "type": "Element",
@@ -593,7 +592,7 @@ class PccParamsListType:
     class Meta:
         name = "pccParamsListType"
 
-    pcc_params: Tuple[PccParamsType, ...] = field(
+    pcc_params: tuple[PccParamsType, ...] = field(
         default_factory=tuple,
         metadata={
             "name": "pccParams",
@@ -633,7 +632,7 @@ class RlLutListType:
     class Meta:
         name = "rlLutListType"
 
-    rl_lut: Tuple[RlLutType, ...] = field(
+    rl_lut: tuple[RlLutType, ...] = field(
         default_factory=tuple,
         metadata={
             "name": "rlLut",
@@ -670,7 +669,7 @@ class RxVariationCorrectionParamsListType:
     class Meta:
         name = "rxVariationCorrectionParamsListType"
 
-    rx_variation_correction_params: Tuple[
+    rx_variation_correction_params: tuple[
         RxVariationCorrectionParamsType, ...
     ] = field(
         default_factory=tuple,
@@ -711,7 +710,7 @@ class SwathMapListType:
     class Meta:
         name = "swathMapListType"
 
-    swath_map: Tuple[SwathMapType, ...] = field(
+    swath_map: tuple[SwathMapType, ...] = field(
         default_factory=tuple,
         metadata={
             "name": "swathMap",
@@ -748,7 +747,7 @@ class ThresholdLutListType:
     class Meta:
         name = "thresholdLutListType"
 
-    threshold_lut: Tuple[ThresholdLutType, ...] = field(
+    threshold_lut: tuple[ThresholdLutType, ...] = field(
         default_factory=tuple,
         metadata={
             "name": "thresholdLut",
@@ -1117,7 +1116,7 @@ class InternalCalibrationParamsListType:
     class Meta:
         name = "internalCalibrationParamsListType"
 
-    internal_calibration_params: Tuple[InternalCalibrationParamsType, ...] = (
+    internal_calibration_params: tuple[InternalCalibrationParamsType, ...] = (
         field(
             default_factory=tuple,
             metadata={
@@ -1159,7 +1158,7 @@ class SequenceListType:
     class Meta:
         name = "sequenceListType"
 
-    sequence: Tuple[SequenceType, ...] = field(
+    sequence: tuple[SequenceType, ...] = field(
         default_factory=tuple,
         metadata={
             "type": "Element",
@@ -1195,7 +1194,7 @@ class SwathParamsListType:
     class Meta:
         name = "swathParamsListType"
 
-    swath_params: Tuple[SwathParamsType, ...] = field(
+    swath_params: tuple[SwathParamsType, ...] = field(
         default_factory=tuple,
         metadata={
             "name": "swathParams",
@@ -1293,7 +1292,7 @@ class TimelineListType:
     class Meta:
         name = "timelineListType"
 
-    timeline: Tuple[TimelineType, ...] = field(
+    timeline: tuple[TimelineType, ...] = field(
         default_factory=tuple,
         metadata={
             "type": "Element",
