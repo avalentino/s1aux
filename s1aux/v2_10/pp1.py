@@ -18,10 +18,7 @@ from .s1_object_types import (
     WeightingWindowType,
     FloatCoefficientArray,
     DoubleCoefficientArray,
-    BistaticDelayMethodType,
-    RfimitigationDomainType,
     TopsFilterConventionType,
-    RfimitigationPerformedType,
 )
 
 
@@ -848,9 +845,6 @@ class PreProcParamsType:
         “Extracted” and the IPF determines that the reconstructed replica is
         valid; otherwise, the pgModel will be used if this field is set to
         “Model” or the reconstructed replica is deemed invalid.
-    estimate_noise_equivalent_power_flag
-        If true, then estimate the noise equivalent power from the noise
-        equivalent echoes.
     """
 
     class Meta:
@@ -946,14 +940,6 @@ class PreProcParamsType:
             "name": "pgSource",
             "type": "Element",
             "required": True,
-        }
-    )
-    estimate_noise_equivalent_power_flag: str = field(
-        metadata={
-            "name": "estimateNoiseEquivalentPowerFlag",
-            "type": "Element",
-            "required": True,
-            "pattern": r"(false)|(true)",
         }
     )
 
@@ -1126,8 +1112,6 @@ class CommonProcParamsType:
     correct_bistatic_delay_flag
         Flag to compensate for the bi-static delay. Correction will be
         performed if and only if this flag is set to "true".
-    correct_bistatic_delay_method
-        Method used to compensate for the bi-static delay.
     correct_rx_variation_flag
         Flag to control the correction of the gain variation across the
         receive window. Receive variation correction will be performed if
@@ -1206,13 +1190,6 @@ class CommonProcParamsType:
             "type": "Element",
             "required": True,
             "pattern": r"(false)|(true)",
-        }
-    )
-    correct_bistatic_delay_method: BistaticDelayMethodType = field(
-        metadata={
-            "name": "correctBistaticDelayMethod",
-            "type": "Element",
-            "required": True,
         }
     )
     correct_rx_variation_flag: str = field(
@@ -1451,12 +1428,6 @@ class SlcProcParamsType:
     estimate_thermal_noise_flag
         Thermal noise estimation flag. True if thermal noise estimation is
         to be performed, false otherwise.
-    rfi_mitigation_performed
-        When to perform the RFI mitigation step: "Always", "Never",
-        "BasedOnNoiseMeas".
-    rfi_mitigation_domain
-        In what domain the RFI mitigation step should be performed: "Time",
-        "Frequency", "TimeAndFrequency".
     rrf_spectrum
         The type of range matched filter to use during processing.
         "Unextended": range reference function is unextended in frequency
@@ -1493,20 +1464,6 @@ class SlcProcParamsType:
             "type": "Element",
             "required": True,
             "pattern": r"(false)|(true)",
-        }
-    )
-    rfi_mitigation_performed: RfimitigationPerformedType = field(
-        metadata={
-            "name": "rfiMitigationPerformed",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    rfi_mitigation_domain: RfimitigationDomainType = field(
-        metadata={
-            "name": "rfiMitigationDomain",
-            "type": "Element",
-            "required": True,
         }
     )
     rrf_spectrum: RrfSpectrumType = field(
@@ -1613,35 +1570,35 @@ class L1ProductType:
             "required": True,
         }
     )
-    common_proc_params: Optional[CommonProcParamsType] = field(
+    common_proc_params: CommonProcParamsType | None = field(
         default=None,
         metadata={
             "name": "commonProcParams",
             "type": "Element",
         },
     )
-    pre_proc_params: Optional[PreProcParamsType] = field(
+    pre_proc_params: PreProcParamsType | None = field(
         default=None,
         metadata={
             "name": "preProcParams",
             "type": "Element",
         },
     )
-    dc_proc_params: Optional[DcProcParamsType] = field(
+    dc_proc_params: DcProcParamsType | None = field(
         default=None,
         metadata={
             "name": "dcProcParams",
             "type": "Element",
         },
     )
-    slc_proc_params: Optional[SlcProcParamsType] = field(
+    slc_proc_params: SlcProcParamsType | None = field(
         default=None,
         metadata={
             "name": "slcProcParams",
             "type": "Element",
         },
     )
-    post_proc_params: Optional[PostProcParamsType] = field(
+    post_proc_params: PostProcParamsType | None = field(
         default=None,
         metadata={
             "name": "postProcParams",
@@ -1733,7 +1690,7 @@ class L1AuxiliaryProcessorParametersType:
     )
     schema_version: Decimal = field(
         init=False,
-        default=Decimal("3.7"),
+        default=Decimal("2.10"),
         metadata={
             "name": "schemaVersion",
             "type": "Attribute",

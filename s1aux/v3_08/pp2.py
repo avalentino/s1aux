@@ -182,7 +182,7 @@ class OwiProcParamsType:
                 "required": True,
             },
         )
-        polarisation: Optional[GmfIndexPolarisation] = field(
+        polarisation: GmfIndexPolarisation | None = field(
             default=None,
             metadata={
                 "type": "Attribute",
@@ -389,7 +389,7 @@ class SpectralInversionParamsType:
                 "required": True,
             },
         )
-        beam: Optional[VelthreshBeam] = field(
+        beam: VelthreshBeam | None = field(
             default=None,
             metadata={
                 "type": "Attribute",
@@ -471,7 +471,7 @@ class OswProcParamsType:
                 "required": True,
             },
         )
-        beam: Optional[ActivateTotalHsBeam] = field(
+        beam: ActivateTotalHsBeam | None = field(
             default=None,
             metadata={
                 "type": "Attribute",

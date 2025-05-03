@@ -5,53 +5,6 @@ from dataclasses import field, dataclass
 from xsdata.models.datatype import XmlDateTime
 
 
-class RfimitigationDomainType(Enum):
-    """
-    Enumeration of RFI mitigation domains.
-    """
-
-    TIME = "Time"
-    FREQUENCY = "Frequency"
-    TIME_AND_FREQUENCY = "TimeAndFrequency"
-
-
-class RfimitigationPerformedType(Enum):
-    """
-    Enumeration of RFI mitigation policies.
-    """
-
-    NEVER = "Never"
-    ALWAYS = "Always"
-    BASED_ON_NOISE_MEAS = "BasedOnNoiseMeas"
-
-
-class RfimitigationTimeDomainCorrMethodType(Enum):
-    """
-    Enumeration of RFI mitigation time domain correction methods.
-    """
-
-    NEAREST = "Nearest"
-    ZERO = "Zero"
-
-
-class BistaticDelayMethodType(Enum):
-    """
-    Enumeration of bi-static delay compensation methods.
-    """
-
-    FINE = "Fine"
-    COARSE = "Coarse"
-
-
-class ChirpSourceType(Enum):
-    """
-    Enumeration of the available chirp schemes.
-    """
-
-    NOMINAL = "Nominal"
-    EXTRACTED = "Extracted"
-
-
 @dataclass(frozen=True, slots=True, kw_only=True)
 class ComplexArray:
     """String containing an array of complex value pairs separated by spaces in the
@@ -78,31 +31,12 @@ class ComplexArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
         },
     )
-
-
-class DcInputDataType(Enum):
-    """
-    Enumeration of Doppler centroid input data formats.
-    """
-
-    RAW = "Raw"
-    RANGE_COMPRESSED = "Range Compressed"
-
-
-class DcMethodType(Enum):
-    """
-    Enumeration of Doppler centroid calculation/estimation methods.
-    """
-
-    DATA_ANALYSIS = "Data Analysis"
-    ORBIT_AND_ATTITUDE = "Orbit and Attitude"
-    PRE_DEFINED = "Pre-defined"
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -119,7 +53,7 @@ class Double:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -153,7 +87,7 @@ class DoubleArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -187,7 +121,7 @@ class DoubleCoefficientArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -209,7 +143,7 @@ class Float:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -242,7 +176,7 @@ class FloatArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -275,7 +209,7 @@ class FloatCoefficientArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -308,7 +242,7 @@ class FloatPatternArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -341,7 +275,7 @@ class IntArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -357,26 +291,6 @@ class MissionIdType(Enum):
     S1_A = "S1A"
     S1_B = "S1B"
     ASA = "ASA"
-
-
-class OutputPixelsType(Enum):
-    """
-    Enumeration of output pixel data types.
-    """
-
-    VALUE_32_BIT_FLOAT = "32 bit Float"
-    VALUE_16_BIT_SIGNED_INTEGER = "16 bit Signed Integer"
-    VALUE_16_BIT_UNSIGNED_INTEGER = "16 bit Unsigned Integer"
-    VALUE_8_BIT_UNSIGNED_INTEGER = "8 bit Unsigned Integer"
-
-
-class PgSourceType(Enum):
-    """
-    Enumeration of the available PG schemes.
-    """
-
-    EXTRACTED = "Extracted"
-    MODEL = "Model"
 
 
 class PolarisationType(Enum):
@@ -399,16 +313,6 @@ class ProductType(Enum):
     GRD = "GRD"
     BRW = "BRW"
     OCN = "OCN"
-
-
-class RrfSpectrumType(Enum):
-    """
-    Enumeration of valid RRF types.
-    """
-
-    UNEXTENDED = "Unextended"
-    EXTENDED_FLAT = "Extended Flat"
-    EXTENDED_TAPERED = "Extended Tapered"
 
 
 class SensorModeType(Enum):
@@ -488,16 +392,6 @@ class SwathType(Enum):
     IS7 = "IS7"
 
 
-class TopsFilterConventionType(Enum):
-    """
-    Enumeration of valid conventions for defining the TOPS ramping/de-ramping
-    filter.
-    """
-
-    ALL_LINES = "All Lines"
-    ONLY_ECHO_LINES = "Only Echo Lines"
-
-
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Uint64Array:
     """String containing an array of 64 bit unsigned integer values separated by
@@ -524,7 +418,7 @@ class Uint64Array:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -546,7 +440,7 @@ class UnitInteger:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -569,22 +463,12 @@ class UnitNonNegativeInteger:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
         },
     )
-
-
-class WeightingWindowType(Enum):
-    """
-    Enumeration of weighting windwow names.
-    """
-
-    KAISER = "Kaiser"
-    HAMMING = "Hamming"
-    NONE = "None"
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

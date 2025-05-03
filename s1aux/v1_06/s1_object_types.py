@@ -31,7 +31,7 @@ class ComplexArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -53,7 +53,7 @@ class Double:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -87,7 +87,7 @@ class DoubleArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -121,7 +121,7 @@ class DoubleCoefficientArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -143,7 +143,7 @@ class Float:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -176,7 +176,7 @@ class FloatArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -209,7 +209,7 @@ class FloatCoefficientArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -242,7 +242,7 @@ class FloatPatternArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -275,7 +275,7 @@ class IntArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -418,7 +418,7 @@ class Uint64Array:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -440,7 +440,7 @@ class UnitInteger:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -463,7 +463,7 @@ class UnitNonNegativeInteger:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",

@@ -4,7 +4,7 @@
 exclude: |
     (?x)^(
         tests/data/.*|
-        s1aux/parse/v\d_\d{2}/.*
+        s1aux/v\d_\d{2}/.*
     )
 
 repos:
@@ -15,7 +15,7 @@ repos:
         exclude: |
             (?x)^(
                 tests/data/.*|
-                s1aux/parse/v\d_\d{2}/.*
+                s1aux/v\d_\d{2}/.*
             )
     -   id: end-of-file-fixer
     -   id: check-yaml
@@ -41,7 +41,7 @@ repos:
         exclude: |
             (?x)^(
                 tests/data/.*|
-                s1aux/parse/v\d_\d{2}/.*
+                s1aux/v\d_\d{2}/.*
             )
 
 # -   repo: https://github.com/pycqa/flake8
@@ -86,5 +86,5 @@ repos:
             (?x)^(
                 docs/spelling_wordlist.txt|
                 tests/data/.*|
-                s1aux/parse/v\d_\d{2}/.*
+                s1aux/v\d_\d{2}/.*
             )

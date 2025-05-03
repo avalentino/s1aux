@@ -25,28 +25,13 @@ class RfimitigationPerformedType(Enum):
     BASED_ON_NOISE_MEAS = "BasedOnNoiseMeas"
 
 
-class BandwidthType(Enum):
+class RfimitigationTimeDomainCorrMethodType(Enum):
     """
-    Enumeration of the available bandwidths for SAR signals in the timeline.
-    """
-
-    IMAGE = "Image"
-    FULL = "Full"
-
-
-class BaqCodeType(Enum):
-    """
-    Enumeration of BAQ/FDBAQ LUT index codes.
+    Enumeration of RFI mitigation time domain correction methods.
     """
 
-    BAQ_3_BIT = "BAQ 3-Bit"
-    BAQ_4_BIT = "BAQ 4-Bit"
-    BAQ_5_BIT = "BAQ 5-Bit"
-    BRC_0 = "BRC 0"
-    BRC_1 = "BRC 1"
-    BRC_2 = "BRC 2"
-    BRC_3 = "BRC 3"
-    BRC_4 = "BRC 4"
+    NEAREST = "Nearest"
+    ZERO = "Zero"
 
 
 class BistaticDelayMethodType(Enum):
@@ -56,16 +41,6 @@ class BistaticDelayMethodType(Enum):
 
     FINE = "Fine"
     COARSE = "Coarse"
-
-
-class CalCombinationMethodType(Enum):
-    """
-    Enumeration of valid methods for combining calibration pulses.
-    """
-
-    PCC2 = "PCC2"
-    AVERAGE = "Average"
-    ISOLATION_SUBTRACTION = "Isolation Subtraction"
 
 
 class ChirpSourceType(Enum):
@@ -103,7 +78,7 @@ class ComplexArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -144,7 +119,7 @@ class Double:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -178,7 +153,7 @@ class DoubleArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -212,7 +187,7 @@ class DoubleCoefficientArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -234,7 +209,7 @@ class Float:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -267,7 +242,7 @@ class FloatArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -300,7 +275,7 @@ class FloatCoefficientArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -333,7 +308,7 @@ class FloatPatternArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -366,7 +341,7 @@ class IntArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -436,15 +411,6 @@ class RrfSpectrumType(Enum):
     EXTENDED_TAPERED = "Extended Tapered"
 
 
-class RxPolarisationType(Enum):
-    """
-    Enumeration of valid receive polarisations.
-    """
-
-    H = "H"
-    V = "V"
-
-
 class SensorModeType(Enum):
     """
     Enumeration of valid sensor mode abbreviations for the Sentinel-1 SAR
@@ -469,25 +435,6 @@ class SensorModeType(Enum):
     N6 = "N6"
     RF = "RF"
     IM = "IM"
-
-
-class SignalType(Enum):
-    """
-    Enumeration of valid signal types for the Sentinel-1 SAR instrument.
-    """
-
-    ECHO = "Echo"
-    NOISE = "Noise"
-    TX_CAL = "TxCal"
-    RX_CAL = "RxCal"
-    EPDN_CAL = "EpdnCal"
-    TX_HCAL_ISO = "TxHCalIso"
-    TA_CAL = "TaCal"
-    APDN_CAL = "ApdnCal"
-    TA_RX_CAL = "TaRxCal"
-    APDN_RX_CAL = "ApdnRxCal"
-    TX_RX_OFF = "TxRxOff"
-    SILENT = "Silent"
 
 
 class SwathType(Enum):
@@ -577,7 +524,7 @@ class Uint64Array:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -599,7 +546,7 @@ class UnitInteger:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -622,7 +569,7 @@ class UnitNonNegativeInteger:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",

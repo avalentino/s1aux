@@ -1,10 +1,11 @@
-"""Unit tests for the s1aux.parse package."""
+"""Unit tests for the s1aux package."""
 
 import pathlib
 
 import pytest
 
-import s1aux.parse
+import s1aux
+import s1aux._core
 
 DATADIR = pathlib.Path(__file__).parent / "data"
 
@@ -20,7 +21,7 @@ def test__get_available_spec_versions():
         "v1_06",
         "v1_05",
     )
-    data = s1aux.parse._get_available_spec_versions()
+    data = s1aux._core._get_available_spec_versions()
     assert data == expected
 
 
@@ -41,7 +42,7 @@ def test__get_available_spec_versions():
     ],
 )
 def test__aux_re_match(name):
-    assert s1aux.parse._AUX_PRODUCT_RE.match(name)
+    assert s1aux._core._AUX_PRODUCT_RE.match(name)
 
 
 @pytest.mark.parametrize(
@@ -69,7 +70,7 @@ def test__aux_re_match(name):
     ],
 )
 def test__aux_re_not_match(name):
-    assert not s1aux.parse._AUX_PRODUCT_RE.match(name)
+    assert not s1aux._core._AUX_PRODUCT_RE.match(name)
 
 
 @pytest.mark.parametrize(
@@ -86,14 +87,14 @@ def test__aux_re_not_match(name):
     ],
 )
 def test_get_product_type(name):
-    product_type = s1aux.parse.get_product_type(name)
-    assert isinstance(product_type, s1aux.parse.EProductType)
+    product_type = s1aux.get_product_type(name)
+    assert isinstance(product_type, s1aux.EProductType)
     assert product_type.value == name[8:11]
 
 
 def test_get_product_type_error():
     with pytest.raises(ValueError, match="Sentinel-1"):
-        s1aux.parse.get_product_type("invalid")
+        s1aux.get_product_type("invalid")
 
 
 @pytest.mark.parametrize(
@@ -118,7 +119,7 @@ def test_get_product_type_error():
 )
 def test_load(path):
     version, product_name = path.split("/")
-    mobj = s1aux.parse._AUX_PRODUCT_RE.match(product_name)
+    mobj = s1aux._core._AUX_PRODUCT_RE.match(product_name)
     assert mobj is not None
     product_info = mobj.groupdict()
     mission_id = product_info["mission_id"].lower().replace("_", "-")
@@ -126,7 +127,7 @@ def test_load(path):
     path = DATADIR.joinpath(
         path, "data", f"{mission_id}-aux-{product_type}.xml"
     )
-    data = s1aux.parse.load(path)
+    data = s1aux.load(path)
     assert data is not None
     pkg_version = data.__class__.__module__.split(".")[-2]
     assert version == pkg_version.replace("_", ".")
@@ -144,7 +145,7 @@ def test_load_not__implemented_error(path):
         NotImplementedError,
         match="Loading of '(ML2|SCS)' products is still not implemented",
     ):
-        s1aux.parse.load(path)
+        s1aux.load(path)
 
 
 @pytest.mark.parametrize(
@@ -152,7 +153,7 @@ def test_load_not__implemented_error(path):
 )
 def test_load__file_not_found_error(path):
     with pytest.raises(FileNotFoundError):
-        s1aux.parse.load(path)
+        s1aux.load(path)
 
 
 @pytest.mark.parametrize(
@@ -161,5 +162,5 @@ def test_load__file_not_found_error(path):
 def test_load__parse_error(path, tmp_path):
     fullpath = tmp_path / path
     fullpath.touch()
-    with pytest.raises(s1aux.parse.S1AuxParseError):
-        s1aux.parse.load(fullpath)
+    with pytest.raises(s1aux.S1AuxParseError):
+        s1aux.load(fullpath)

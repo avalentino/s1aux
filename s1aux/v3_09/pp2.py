@@ -6,9 +6,30 @@ from dataclasses import field, dataclass
 from .s1_object_types import Double
 
 
-class GmfIndexPolarisation(Enum):
+class ActivateTotalHsBeam(Enum):
+    WV1 = "WV1"
+    WV2 = "WV2"
+
+
+class GmfPolarisationType(Enum):
     HH = "HH"
     VV = "VV"
+
+
+class UseOnlyInferenceFor(Enum):
+    TOTAL_HS = "TotalHS"
+    QUALITY_FLAG = "QualityFlag"
+
+
+class VelthreshBeam(Enum):
+    WV1 = "WV1"
+    WV2 = "WV2"
+    S1 = "S1"
+    S2 = "S2"
+    S3 = "S3"
+    S4 = "S4"
+    S5 = "S5"
+    S6 = "S6"
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -22,156 +43,23 @@ class WaveRangeAzimuthParamsType:
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class OwiProcParamsType:
-    """
-    OWI processing auxiliary parameters record.
-
-    Parameters
-    ----------
-    range_cell_size
-        Size of the SAR derived wind field in the range direction [m]. Wind
-        cells should typically be square therefore nominally rangeCellSize =
-        azimuthCellSize.
-    azimuth_cell_size
-        Size of the SAR derived wind field in the azimuth direction [m].
-        Wind cells should typically be square therefore nominally
-        azimuthCellSize = rangeCellSize.
-    distance_to_shore
-        Distance to shore where the processing is not performed [Km].
-    wind_speed_std_dev
-        Standard deviation error of the wind speed provided by ancillary
-        wind information [m/s].
-    wind_dir_std_dev
-        Standard deviation error of the wind direction provided by ancillary
-        wind information [degrees].
-    gmf_index
-        Name of the Geophysical Model Function (GMF) to be used for the wind
-        inversion
-    pr_index
-        Name of the Polarisation Ratio Function to be used for the wind
-        inversion (used for HH polarisation data).  This function converts
-        HH NRCS into VV NRCS before applying the GMF to retrieve the wind.
-    inversion_quality_threshold
-        Value above which minimization in the inversion is considered low
-        quality.
-    calibration_quality_threshold
-        Value above which the calibration of the product is considered to be
-        incorrect.
-    nrcs_quality_threshold
-        Value above which the NRCS estimated at the SAR wind cell resolution
-        is considered as low quality.
-    bright_target_pfa
-        Probability of false alarm for the removal of bright target.
-    activate_noise_correction
-        activateNoiseCorrection.
-    """
-
+class GmfIndexType:
     class Meta:
-        name = "owiProcParamsType"
+        name = "gmfIndexType"
 
-    range_cell_size: Double = field(
+    value: int = field(
         metadata={
-            "name": "rangeCellSize",
-            "type": "Element",
             "required": True,
+            "min_inclusive": 0,
+            "max_inclusive": 21,
         }
     )
-    azimuth_cell_size: Double = field(
+    polarisation: GmfPolarisationType | None = field(
+        default=None,
         metadata={
-            "name": "azimuthCellSize",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    distance_to_shore: Double = field(
-        metadata={
-            "name": "distanceToShore",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    wind_speed_std_dev: Double = field(
-        metadata={
-            "name": "windSpeedStdDev",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    wind_dir_std_dev: Double = field(
-        metadata={
-            "name": "windDirStdDev",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    gmf_index: tuple["OwiProcParamsType.GmfIndex", ...] = field(
-        default_factory=tuple,
-        metadata={
-            "name": "gmfIndex",
-            "type": "Element",
-            "min_occurs": 1,
-            "max_occurs": 2,
+            "type": "Attribute",
         },
     )
-    pr_index: str = field(
-        metadata={
-            "name": "prIndex",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    inversion_quality_threshold: Double = field(
-        metadata={
-            "name": "inversionQualityThreshold",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    calibration_quality_threshold: Double = field(
-        metadata={
-            "name": "calibrationQualityThreshold",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    nrcs_quality_threshold: Double = field(
-        metadata={
-            "name": "nrcsQualityThreshold",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    bright_target_pfa: Double = field(
-        metadata={
-            "name": "brightTargetPfa",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    activate_noise_correction: str = field(
-        default="false",
-        metadata={
-            "name": "activateNoiseCorrection",
-            "type": "Element",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        },
-    )
-
-    @dataclass(frozen=True, slots=True, kw_only=True)
-    class GmfIndex:
-        value: str = field(
-            default="",
-            metadata={
-                "required": True,
-            },
-        )
-        polarisation: Optional[GmfIndexPolarisation] = field(
-            default=None,
-            metadata={
-                "type": "Attribute",
-            },
-        )
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -317,6 +205,8 @@ class SpectralInversionParamsType:
         Number of wavenumber bins in polar grid.
     directional_bins
         Number of directional bins in polar grid.
+    velthresh
+        Threshold Factor for velocity bunching.
     """
 
     class Meta:
@@ -354,6 +244,29 @@ class SpectralInversionParamsType:
             "max_inclusive": 4294967295,
         }
     )
+    velthresh: tuple["SpectralInversionParamsType.Velthresh", ...] = field(
+        default_factory=tuple,
+        metadata={
+            "type": "Element",
+            "min_occurs": 1,
+            "max_occurs": 6,
+        },
+    )
+
+    @dataclass(frozen=True, slots=True, kw_only=True)
+    class Velthresh:
+        value: str = field(
+            default="",
+            metadata={
+                "required": True,
+            },
+        )
+        beam: VelthreshBeam | None = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+            },
+        )
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -370,9 +283,21 @@ class OswProcParamsType:
         This record contains the auxiliary parameters required for OSW
         spectral inversion.
     activate_total_hs
-        Flag the activation of the calculation of totalHs calculation
+        Activate the computation of totalHs.
     activate_group_dir
-        Flag the activation of the calculation of totalHs calculation
+        Activate the computation of group direction.
+    activate_noise_correction
+        activate the noise correction.
+    sea_coverage_threshold
+        Threshold on percentage of Sea Coverage. Imagettes having a
+        percentage of Sea Coverage below this threshold will not be
+        processed with a full OSW inversion. Variables not generated will
+        contain fill values. Default is 0%.
+    use_only_inference
+        If false try to use inference with model provided in AUX_ML2: if
+        fail continue process either with legacy process or fill value. If
+        true perform inference with model provided in AUX_ML2: if fail stop
+        LOP process with error.
     """
 
     class Meta:
@@ -392,13 +317,13 @@ class OswProcParamsType:
             "required": True,
         }
     )
-    activate_total_hs: str = field(
-        default="false",
+    activate_total_hs: tuple["OswProcParamsType.ActivateTotalHs", ...] = field(
+        default_factory=tuple,
         metadata={
             "name": "activateTotalHs",
             "type": "Element",
-            "required": True,
-            "pattern": r"(false)|(true)",
+            "min_occurs": 1,
+            "max_occurs": 2,
         },
     )
     activate_group_dir: str = field(
@@ -407,6 +332,204 @@ class OswProcParamsType:
             "name": "activateGroupDir",
             "type": "Element",
             "required": True,
+            "pattern": r"(false)|(true)",
+        },
+    )
+    activate_noise_correction: str | None = field(
+        default=None,
+        metadata={
+            "name": "activateNoiseCorrection",
+            "type": "Element",
+            "pattern": r"(false)|(true)",
+        },
+    )
+    sea_coverage_threshold: float | None = field(
+        default=None,
+        metadata={
+            "name": "seaCoverageThreshold",
+            "type": "Element",
+            "min_inclusive": 0.0,
+            "max_inclusive": 100.0,
+        },
+    )
+    use_only_inference: tuple["OswProcParamsType.UseOnlyInference", ...] = (
+        field(
+            default_factory=tuple,
+            metadata={
+                "name": "useOnlyInference",
+                "type": "Element",
+                "max_occurs": 2,
+            },
+        )
+    )
+
+    @dataclass(frozen=True, slots=True, kw_only=True)
+    class ActivateTotalHs:
+        value: str = field(
+            default="",
+            metadata={
+                "required": True,
+            },
+        )
+        beam: ActivateTotalHsBeam | None = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+            },
+        )
+
+    @dataclass(frozen=True, slots=True, kw_only=True)
+    class UseOnlyInference:
+        value: str = field(
+            default="",
+            metadata={
+                "required": True,
+            },
+        )
+        for_value: UseOnlyInferenceFor | None = field(
+            default=None,
+            metadata={
+                "name": "for",
+                "type": "Attribute",
+            },
+        )
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class OwiProcParamsType:
+    """
+    OWI processing auxiliary parameters record.
+
+    Parameters
+    ----------
+    range_cell_size
+        Size of the SAR derived wind field in the range direction [m]. Wind
+        cells should typically be square therefore nominally rangeCellSize =
+        azimuthCellSize.
+    azimuth_cell_size
+        Size of the SAR derived wind field in the azimuth direction [m].
+        Wind cells should typically be square therefore nominally
+        azimuthCellSize = rangeCellSize.
+    distance_to_shore
+        Distance to shore where the processing is not performed [km].
+    wind_speed_std_dev
+        Standard deviation error of the wind speed provided by ancillary
+        wind information [m/s].
+    wind_dir_std_dev
+        Standard deviation error of the wind direction provided by ancillary
+        wind information [degrees].
+    gmf_index
+        Name (or index) of the Geophysical Model Function (GMF) to be used
+        for the wind inversion
+    pr_index
+        Name (or index) of the Polarisation Ratio Function to be used for
+        the wind inversion (used for HH polarisation data).  This function
+        converts HH NRCS into VV NRCS before applying the GMF to retrieve
+        the wind.
+    inversion_quality_threshold
+        Value above which minimization in the inversion is considered low
+        quality.
+    calibration_quality_threshold
+        Value above which the calibration of the product is considered to be
+        incorrect.
+    nrcs_quality_threshold
+        Value above which the NRCS estimated at the SAR wind cell resolution
+        is considered as low quality.
+    bright_target_pfa
+        Probability of false alarm for the removal of bright target.
+    activate_noise_correction
+        Activate noise correction.
+    """
+
+    class Meta:
+        name = "owiProcParamsType"
+
+    range_cell_size: Double = field(
+        metadata={
+            "name": "rangeCellSize",
+            "type": "Element",
+            "required": True,
+        }
+    )
+    azimuth_cell_size: Double = field(
+        metadata={
+            "name": "azimuthCellSize",
+            "type": "Element",
+            "required": True,
+        }
+    )
+    distance_to_shore: Double = field(
+        metadata={
+            "name": "distanceToShore",
+            "type": "Element",
+            "required": True,
+        }
+    )
+    wind_speed_std_dev: Double = field(
+        metadata={
+            "name": "windSpeedStdDev",
+            "type": "Element",
+            "required": True,
+        }
+    )
+    wind_dir_std_dev: Double = field(
+        metadata={
+            "name": "windDirStdDev",
+            "type": "Element",
+            "required": True,
+        }
+    )
+    gmf_index: tuple[GmfIndexType, ...] = field(
+        default_factory=tuple,
+        metadata={
+            "name": "gmfIndex",
+            "type": "Element",
+            "min_occurs": 1,
+            "max_occurs": 2,
+        },
+    )
+    pr_index: int = field(
+        metadata={
+            "name": "prIndex",
+            "type": "Element",
+            "required": True,
+            "min_inclusive": 0,
+            "max_inclusive": 3,
+        }
+    )
+    inversion_quality_threshold: Double = field(
+        metadata={
+            "name": "inversionQualityThreshold",
+            "type": "Element",
+            "required": True,
+        }
+    )
+    calibration_quality_threshold: Double = field(
+        metadata={
+            "name": "calibrationQualityThreshold",
+            "type": "Element",
+            "required": True,
+        }
+    )
+    nrcs_quality_threshold: Double = field(
+        metadata={
+            "name": "nrcsQualityThreshold",
+            "type": "Element",
+            "required": True,
+        }
+    )
+    bright_target_pfa: Double = field(
+        metadata={
+            "name": "brightTargetPfa",
+            "type": "Element",
+            "required": True,
+        }
+    )
+    activate_noise_correction: str | None = field(
+        default=None,
+        metadata={
+            "name": "activateNoiseCorrection",
+            "type": "Element",
             "pattern": r"(false)|(true)",
         },
     )
@@ -559,7 +682,7 @@ class L2AuxiliaryProcessorParametersType:
     )
     schema_version: Decimal = field(
         init=False,
-        default=Decimal("3.3"),
+        default=Decimal("3.12"),
         metadata={
             "name": "schemaVersion",
             "type": "Attribute",

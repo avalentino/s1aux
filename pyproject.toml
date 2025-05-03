@@ -56,7 +56,7 @@ enable-unstable-feature = [
     "wrap_long_dict_values_in_parens",
 ]
 target-version = ['py310']
-extend-exclude = "s1aux/parse/v.*"
+extend-exclude = "s1aux/v.*"
 
 
 [tool.isort]
@@ -70,7 +70,7 @@ line_length = 79
 # force_grid_wrap = 0
 # ensure_newline_before_comments = true
 known_first_party = ["s1aux"]
-skip_glob = ["s1aux/parse/*"]
+skip_glob = ["s1aux/*"]
 
 
 [tool.pydocstyle]
@@ -81,7 +81,7 @@ match-dir='(?!(v\d_\{2}d))'
 
 
 [tool.codespell]
-skip = "./tools/data,./tools/*.ipynb,./tests/data,./s1aux/parse/v*,./docs/spelling_wordlist.txt"
+skip = "./tools/data,./tools/*.ipynb,./tests/data,./s1aux/v*,./docs/spelling_wordlist.txt"
 count = true
 quiet-level = 3
 
@@ -90,7 +90,7 @@ quiet-level = 3
 line-length = 79
 # indent-width = 4
 # target-version = "py39"
-extend-exclude = ["s1aux/parse/*", "tools/*.ipynb"]
+extend-exclude = ["s1aux/v*", "tools/*.ipynb"]
 
 
 [tool.ruff.lint]

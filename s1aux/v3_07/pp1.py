@@ -22,7 +22,6 @@ from .s1_object_types import (
     RfimitigationDomainType,
     TopsFilterConventionType,
     RfimitigationPerformedType,
-    RfimitigationTimeDomainCorrMethodType,
 )
 
 
@@ -600,188 +599,6 @@ class ReplicaThresholdParamsType:
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class RfiFrequencyDomainParamsType:
-    """
-    RFI frequency domain mitigation parameters record.
-
-    Parameters
-    ----------
-    num_blocks
-        Number of blocks in which the data is split for RFI mitigation.
-    block_overlap_lines
-        Number of overlap lines between blocks for RFI mitigation.
-    use_synthetic_chirp
-        Flag to control whether the synthetic chirp is used.
-    periodogram_size
-        Size of the single-echo PSD computed using the Welch method for
-        isolated RFI detection.
-    persistent_rfithreshold
-        Threshold in DB for persistent RFI detection.
-    isolated_rfithreshold
-        Threshold in DB for isolated RFI detection.
-    threshold_std
-        If the standard deviation of the power difference (in DB) between
-        the echo PSD and the expected echo power for current line is below
-        this threshold, then all the echo is marked as isolated RFI.
-    quantile_low
-        Minimum quantile used for computing expected echo power. Only the
-        values above this quantile are used for polynomial fitting.
-    quantile_high
-        Maximum quantile used for computing expected echo power. Only the
-        values below this quantile are used for polynomial fitting.
-    """
-
-    class Meta:
-        name = "rfiFrequencyDomainParamsType"
-
-    num_blocks: Uint32 = field(
-        metadata={
-            "name": "numBlocks",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    block_overlap_lines: Uint32 = field(
-        metadata={
-            "name": "blockOverlapLines",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    use_synthetic_chirp: str = field(
-        metadata={
-            "name": "useSyntheticChirp",
-            "type": "Element",
-            "required": True,
-            "pattern": r"(false)|(true)",
-        }
-    )
-    periodogram_size: Uint32 = field(
-        metadata={
-            "name": "periodogramSize",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    persistent_rfithreshold: Double = field(
-        metadata={
-            "name": "persistentRFIThreshold",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    isolated_rfithreshold: Double = field(
-        metadata={
-            "name": "isolatedRFIThreshold",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    threshold_std: Double = field(
-        metadata={
-            "name": "thresholdStd",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    quantile_low: Double = field(
-        metadata={
-            "name": "quantileLow",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    quantile_high: Double = field(
-        metadata={
-            "name": "quantileHigh",
-            "type": "Element",
-            "required": True,
-        }
-    )
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class RfiTimeDomainParamsType:
-    """
-    RFI time domain mitigation parameters record.
-
-    Parameters
-    ----------
-    median_filter_block_lines
-        Number of range lines to be used to compute the local median filter.
-    box_filter_azimuth_dimension
-        Dimension along the azimuth direction of the convolution block used
-        to compute the local percentiles of the signal distribution.
-    box_filter_range_dimension
-        Dimension along the range direction of the convolution block used to
-        compute the local percentiles of the signal distribution.
-    percentile_threshold
-        Percentile of the signal distribution model to be tuned. Lower
-        values imply more false positives.
-    morph_open_line_length
-        Length of the line patter used for the morphological-open filter.
-    morph_close_line_length
-        Length of the line patter used for the morphological-close filter.
-    corr_method
-        Correction mode to be applied: Nearest (substitute with the nearest
-        valid neighbour), Zero (substitute with zero).
-    """
-
-    class Meta:
-        name = "rfiTimeDomainParamsType"
-
-    median_filter_block_lines: Uint32 = field(
-        metadata={
-            "name": "medianFilterBlockLines",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    box_filter_azimuth_dimension: Uint32 = field(
-        metadata={
-            "name": "boxFilterAzimuthDimension",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    box_filter_range_dimension: Uint32 = field(
-        metadata={
-            "name": "boxFilterRangeDimension",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    percentile_threshold: Double = field(
-        metadata={
-            "name": "percentileThreshold",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    morph_open_line_length: Uint32 = field(
-        metadata={
-            "name": "morphOpenLineLength",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    morph_close_line_length: Uint32 = field(
-        metadata={
-            "name": "morphCloseLineLength",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    corr_method: RfimitigationTimeDomainCorrMethodType = field(
-        metadata={
-            "name": "corrMethod",
-            "type": "Element",
-            "required": True,
-        }
-    )
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
 class ScalingLutType:
     """
     Application scaling LUT.
@@ -1177,38 +994,6 @@ class RangeParamsListType:
             "required": True,
             "min_inclusive": 0,
             "max_inclusive": 4294967295,
-        }
-    )
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class RfiProcParamsType:
-    """
-    RFI mitigation auxiliary parameters.
-
-    Parameters
-    ----------
-    rfi_time_domain_params
-        The parameters needed for RFI mitigation in time domain.
-    rfi_frequency_domain_params
-        The parameters needed for RFI mitigation in frequency domain.
-    """
-
-    class Meta:
-        name = "rfiProcParamsType"
-
-    rfi_time_domain_params: RfiTimeDomainParamsType = field(
-        metadata={
-            "name": "rfiTimeDomainParams",
-            "type": "Element",
-            "required": True,
-        }
-    )
-    rfi_frequency_domain_params: RfiFrequencyDomainParamsType = field(
-        metadata={
-            "name": "rfiFrequencyDomainParams",
-            "type": "Element",
-            "required": True,
         }
     )
 
@@ -1804,10 +1589,6 @@ class L1ProductType:
     pre_proc_params
         Pre-processing auxiliary parameters. This record contains the
         auxiliary parameters required during image pre-processing.
-    rfi_proc_params
-        RFI mitigation auxiliary parameters. This record contains the
-        auxiliary parameters required during RFI mitigation (time and
-        frequency domain).
     dc_proc_params
         Doppler centroid processing auxiliary parameters. This record
         contains the auxiliary parameters required during Doppler centroid
@@ -1832,42 +1613,35 @@ class L1ProductType:
             "required": True,
         }
     )
-    common_proc_params: Optional[CommonProcParamsType] = field(
+    common_proc_params: CommonProcParamsType | None = field(
         default=None,
         metadata={
             "name": "commonProcParams",
             "type": "Element",
         },
     )
-    pre_proc_params: Optional[PreProcParamsType] = field(
+    pre_proc_params: PreProcParamsType | None = field(
         default=None,
         metadata={
             "name": "preProcParams",
             "type": "Element",
         },
     )
-    rfi_proc_params: Optional[RfiProcParamsType] = field(
-        default=None,
-        metadata={
-            "name": "rfiProcParams",
-            "type": "Element",
-        },
-    )
-    dc_proc_params: Optional[DcProcParamsType] = field(
+    dc_proc_params: DcProcParamsType | None = field(
         default=None,
         metadata={
             "name": "dcProcParams",
             "type": "Element",
         },
     )
-    slc_proc_params: Optional[SlcProcParamsType] = field(
+    slc_proc_params: SlcProcParamsType | None = field(
         default=None,
         metadata={
             "name": "slcProcParams",
             "type": "Element",
         },
     )
-    post_proc_params: Optional[PostProcParamsType] = field(
+    post_proc_params: PostProcParamsType | None = field(
         default=None,
         metadata={
             "name": "postProcParams",
@@ -1959,7 +1733,7 @@ class L1AuxiliaryProcessorParametersType:
     )
     schema_version: Decimal = field(
         init=False,
-        default=Decimal("3.12"),
+        default=Decimal("3.7"),
         metadata={
             "name": "schemaVersion",
             "type": "Attribute",

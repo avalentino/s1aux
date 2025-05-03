@@ -18,6 +18,7 @@ from .s1_object_types import (
     WeightingWindowType,
     FloatCoefficientArray,
     DoubleCoefficientArray,
+    BistaticDelayMethodType,
     TopsFilterConventionType,
 )
 
@@ -845,6 +846,9 @@ class PreProcParamsType:
         “Extracted” and the IPF determines that the reconstructed replica is
         valid; otherwise, the pgModel will be used if this field is set to
         “Model” or the reconstructed replica is deemed invalid.
+    estimate_noise_equivalent_power_flag
+        If true, then estimate the noise equivalent power from the noise
+        equivalent echoes.
     """
 
     class Meta:
@@ -940,6 +944,14 @@ class PreProcParamsType:
             "name": "pgSource",
             "type": "Element",
             "required": True,
+        }
+    )
+    estimate_noise_equivalent_power_flag: str = field(
+        metadata={
+            "name": "estimateNoiseEquivalentPowerFlag",
+            "type": "Element",
+            "required": True,
+            "pattern": r"(false)|(true)",
         }
     )
 
@@ -1112,6 +1124,8 @@ class CommonProcParamsType:
     correct_bistatic_delay_flag
         Flag to compensate for the bi-static delay. Correction will be
         performed if and only if this flag is set to "true".
+    correct_bistatic_delay_method
+        Method used to compensate for the bi-static delay.
     correct_rx_variation_flag
         Flag to control the correction of the gain variation across the
         receive window. Receive variation correction will be performed if
@@ -1190,6 +1204,13 @@ class CommonProcParamsType:
             "type": "Element",
             "required": True,
             "pattern": r"(false)|(true)",
+        }
+    )
+    correct_bistatic_delay_method: BistaticDelayMethodType = field(
+        metadata={
+            "name": "correctBistaticDelayMethod",
+            "type": "Element",
+            "required": True,
         }
     )
     correct_rx_variation_flag: str = field(
@@ -1570,35 +1591,35 @@ class L1ProductType:
             "required": True,
         }
     )
-    common_proc_params: Optional[CommonProcParamsType] = field(
+    common_proc_params: CommonProcParamsType | None = field(
         default=None,
         metadata={
             "name": "commonProcParams",
             "type": "Element",
         },
     )
-    pre_proc_params: Optional[PreProcParamsType] = field(
+    pre_proc_params: PreProcParamsType | None = field(
         default=None,
         metadata={
             "name": "preProcParams",
             "type": "Element",
         },
     )
-    dc_proc_params: Optional[DcProcParamsType] = field(
+    dc_proc_params: DcProcParamsType | None = field(
         default=None,
         metadata={
             "name": "dcProcParams",
             "type": "Element",
         },
     )
-    slc_proc_params: Optional[SlcProcParamsType] = field(
+    slc_proc_params: SlcProcParamsType | None = field(
         default=None,
         metadata={
             "name": "slcProcParams",
             "type": "Element",
         },
     )
-    post_proc_params: Optional[PostProcParamsType] = field(
+    post_proc_params: PostProcParamsType | None = field(
         default=None,
         metadata={
             "name": "postProcParams",
@@ -1690,7 +1711,7 @@ class L1AuxiliaryProcessorParametersType:
     )
     schema_version: Decimal = field(
         init=False,
-        default=Decimal("2.10"),
+        default=Decimal("3.3"),
         metadata={
             "name": "schemaVersion",
             "type": "Attribute",

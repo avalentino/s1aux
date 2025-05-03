@@ -1,11 +1,14 @@
-"""Sentinel-1 Auxiliary XML data parsing sub-package."""
+"""Core functions for Sentinel-1 Auxiliary XML data parsing."""
 
+import os
 import re
 import enum
 import pathlib
 import functools
 import importlib
-from xml.etree import ElementTree as etree
+import contextlib
+from xml.etree import ElementTree as etree  # noqa: N813
+from collections.abc import Sequence
 
 from xsdata.exceptions import ParserError
 from xsdata.formats.dataclass.parsers import XmlParser
@@ -27,10 +30,10 @@ _AUX_DATAFILE_RE = re.compile(
 
 
 @functools.cache
-def _get_available_spec_versions():
-    def _key_func(s: str):
-        assert s[0] == "v"
-        return tuple(map(int, s[1:].split("_")))
+def _get_available_spec_versions() -> Sequence[str]:
+    def _key_func(version_str: str):
+        assert version_str[0] == "v"
+        return tuple(map(int, version_str[1:].split("_")))
 
     package_path = pathlib.Path(__file__).parent
     versions = [d.name for d in package_path.glob("v?_??") if d.is_dir()]
@@ -51,6 +54,7 @@ class EProductType(enum.Enum):
 
 
 def get_product_type(name: str) -> EProductType:
+    """Return the product type corresponding to the input filename."""
     mobj = _AUX_PRODUCT_RE.match(name)
     if not mobj:
         mobj = _AUX_DATAFILE_RE.match(name)
@@ -67,7 +71,8 @@ class S1AuxParseError(ParserError):
     """Error in S1 AUX file parsing."""
 
 
-def load(path):
+def load(path: os.PathLike[str] | str):
+    """Load the Sentinel-1 Auxiliary (AUX) file specified in input."""
     path = pathlib.Path(path)
     product_type = get_product_type(path.name)
 
@@ -92,13 +97,13 @@ def load(path):
 
     try:
         xmldoc = etree.parse(path)
-    except etree.ParseError:
-        raise S1AuxParseError(f"unable to parse: '{path}'")
+    except etree.ParseError as exc:
+        raise S1AuxParseError(f"unable to parse: '{path}'") from exc
 
     root = xmldoc.getroot()
-    assert (
-        root.tag.lower() == xml_type_name.lower()
-    ), f"root.tag: {root.tag}, xml_type_name: {xml_type_name}"
+    assert root.tag.lower() == xml_type_name.lower(), (
+        f"root.tag: {root.tag}, xml_type_name: {xml_type_name}"
+    )
 
     if "schemaVersion" in root.attrib:
         major, minor = root.attrib["schemaVersion"].split(".")
@@ -111,15 +116,13 @@ def load(path):
     for version in spec_versions:
         modname = f".{version}.{product_type.name.lower()}"
         try:
-            mod = importlib.import_module(modname, package="s1aux.parse")
+            mod = importlib.import_module(modname, package="s1aux")
             xml_obj_type = getattr(mod, xml_type_name)
         except ImportError:
             pass
         else:
             parser = XmlParser(handler=XmlEventHandler)
-            try:
+            with contextlib.suppress(ParserError, TypeError):
                 return parser.parse(xmldoc, xml_obj_type)
-            except (ParserError, TypeError):
-                pass
 
     raise S1AuxParseError(f"Unable to load '{path}'")

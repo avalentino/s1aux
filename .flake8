@@ -29,13 +29,15 @@ extend-select = W504
 per-file-ignores =
     tests/*: D,ANN,I900,S101,SF01
     */tests/*: D,ANN,I900,S101,SF01
+    s1aux/_core.py: ANN201,ANN202,NIC002,S101,S314,S405,TC003
     tools/codegen.py: ANN101,B902,CCR,C812,FNE008,G200,I900,INP001,NIC002,S113,S314,S404,S405,S603,TC003
 statistics = True
 count = True
-extend-exclude = s1aux/parse/*
+extend-exclude = s1aux/v*
 
 # flake8-cognitive-complexity
 # max-cognitive-complexity = 7  # default
+max-cognitive-complexity = 8
 
 # flake8-noqa
 noqa-require-code = True

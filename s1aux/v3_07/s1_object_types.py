@@ -5,6 +5,26 @@ from dataclasses import field, dataclass
 from xsdata.models.datatype import XmlDateTime
 
 
+class RfimitigationDomainType(Enum):
+    """
+    Enumeration of RFI mitigation domains.
+    """
+
+    TIME = "Time"
+    FREQUENCY = "Frequency"
+    TIME_AND_FREQUENCY = "TimeAndFrequency"
+
+
+class RfimitigationPerformedType(Enum):
+    """
+    Enumeration of RFI mitigation policies.
+    """
+
+    NEVER = "Never"
+    ALWAYS = "Always"
+    BASED_ON_NOISE_MEAS = "BasedOnNoiseMeas"
+
+
 class BandwidthType(Enum):
     """
     Enumeration of the available bandwidths for SAR signals in the timeline.
@@ -83,7 +103,7 @@ class ComplexArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -124,7 +144,7 @@ class Double:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -158,7 +178,7 @@ class DoubleArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -192,7 +212,7 @@ class DoubleCoefficientArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -214,7 +234,7 @@ class Float:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -247,7 +267,7 @@ class FloatArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -280,7 +300,7 @@ class FloatCoefficientArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -313,7 +333,7 @@ class FloatPatternArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -346,7 +366,7 @@ class IntArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -557,7 +577,7 @@ class Uint64Array:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -579,7 +599,7 @@ class UnitInteger:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -602,7 +622,7 @@ class UnitNonNegativeInteger:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",

@@ -5,6 +5,49 @@ from dataclasses import field, dataclass
 from xsdata.models.datatype import XmlDateTime
 
 
+class BandwidthType(Enum):
+    """
+    Enumeration of the available bandwidths for SAR signals in the timeline.
+    """
+
+    IMAGE = "Image"
+    FULL = "Full"
+
+
+class BaqCodeType(Enum):
+    """
+    Enumeration of BAQ/FDBAQ LUT index codes.
+    """
+
+    BAQ_3_BIT = "BAQ 3-Bit"
+    BAQ_4_BIT = "BAQ 4-Bit"
+    BAQ_5_BIT = "BAQ 5-Bit"
+    BRC_0 = "BRC 0"
+    BRC_1 = "BRC 1"
+    BRC_2 = "BRC 2"
+    BRC_3 = "BRC 3"
+    BRC_4 = "BRC 4"
+
+
+class CalCombinationMethodType(Enum):
+    """
+    Enumeration of valid methods for combining calibration pulses.
+    """
+
+    PCC2 = "PCC2"
+    AVERAGE = "Average"
+    ISOLATION_SUBTRACTION = "Isolation Subtraction"
+
+
+class ChirpSourceType(Enum):
+    """
+    Enumeration of the available chirp schemes.
+    """
+
+    NOMINAL = "Nominal"
+    EXTRACTED = "Extracted"
+
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class ComplexArray:
     """String containing an array of complex value pairs separated by spaces in the
@@ -31,12 +74,31 @@ class ComplexArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
         },
     )
+
+
+class DcInputDataType(Enum):
+    """
+    Enumeration of Doppler centroid input data formats.
+    """
+
+    RAW = "Raw"
+    RANGE_COMPRESSED = "Range Compressed"
+
+
+class DcMethodType(Enum):
+    """
+    Enumeration of Doppler centroid calculation/estimation methods.
+    """
+
+    DATA_ANALYSIS = "Data Analysis"
+    ORBIT_AND_ATTITUDE = "Orbit and Attitude"
+    PRE_DEFINED = "Pre-defined"
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -53,7 +115,7 @@ class Double:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -87,7 +149,7 @@ class DoubleArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -121,7 +183,7 @@ class DoubleCoefficientArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -143,7 +205,7 @@ class Float:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -176,7 +238,7 @@ class FloatArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -209,7 +271,7 @@ class FloatCoefficientArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -242,7 +304,7 @@ class FloatPatternArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -275,7 +337,7 @@ class IntArray:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -291,6 +353,26 @@ class MissionIdType(Enum):
     S1_A = "S1A"
     S1_B = "S1B"
     ASA = "ASA"
+
+
+class OutputPixelsType(Enum):
+    """
+    Enumeration of output pixel data types.
+    """
+
+    VALUE_32_BIT_FLOAT = "32 bit Float"
+    VALUE_16_BIT_SIGNED_INTEGER = "16 bit Signed Integer"
+    VALUE_16_BIT_UNSIGNED_INTEGER = "16 bit Unsigned Integer"
+    VALUE_8_BIT_UNSIGNED_INTEGER = "8 bit Unsigned Integer"
+
+
+class PgSourceType(Enum):
+    """
+    Enumeration of the available PG schemes.
+    """
+
+    EXTRACTED = "Extracted"
+    MODEL = "Model"
 
 
 class PolarisationType(Enum):
@@ -313,6 +395,25 @@ class ProductType(Enum):
     GRD = "GRD"
     BRW = "BRW"
     OCN = "OCN"
+
+
+class RrfSpectrumType(Enum):
+    """
+    Enumeration of valid RRF types.
+    """
+
+    UNEXTENDED = "Unextended"
+    EXTENDED_FLAT = "Extended Flat"
+    EXTENDED_TAPERED = "Extended Tapered"
+
+
+class RxPolarisationType(Enum):
+    """
+    Enumeration of valid receive polarisations.
+    """
+
+    H = "H"
+    V = "V"
 
 
 class SensorModeType(Enum):
@@ -339,6 +440,25 @@ class SensorModeType(Enum):
     N6 = "N6"
     RF = "RF"
     IM = "IM"
+
+
+class SignalType(Enum):
+    """
+    Enumeration of valid signal types for the Sentinel-1 SAR instrument.
+    """
+
+    ECHO = "Echo"
+    NOISE = "Noise"
+    TX_CAL = "TxCal"
+    RX_CAL = "RxCal"
+    EPDN_CAL = "EpdnCal"
+    TX_HCAL_ISO = "TxHCalIso"
+    TA_CAL = "TaCal"
+    APDN_CAL = "ApdnCal"
+    TA_RX_CAL = "TaRxCal"
+    APDN_RX_CAL = "ApdnRxCal"
+    TX_RX_OFF = "TxRxOff"
+    SILENT = "Silent"
 
 
 class SwathType(Enum):
@@ -392,6 +512,16 @@ class SwathType(Enum):
     IS7 = "IS7"
 
 
+class TopsFilterConventionType(Enum):
+    """
+    Enumeration of valid conventions for defining the TOPS ramping/de-ramping
+    filter.
+    """
+
+    ALL_LINES = "All Lines"
+    ONLY_ECHO_LINES = "Only Echo Lines"
+
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Uint64Array:
     """String containing an array of 64 bit unsigned integer values separated by
@@ -418,7 +548,7 @@ class Uint64Array:
             "max_inclusive": 4294967295,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -440,7 +570,7 @@ class UnitInteger:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
@@ -463,12 +593,22 @@ class UnitNonNegativeInteger:
             "required": True,
         }
     )
-    units: Optional[str] = field(
+    units: str | None = field(
         default=None,
         metadata={
             "type": "Attribute",
         },
     )
+
+
+class WeightingWindowType(Enum):
+    """
+    Enumeration of weighting windwow names.
+    """
+
+    KAISER = "Kaiser"
+    HAMMING = "Hamming"
+    NONE = "None"
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

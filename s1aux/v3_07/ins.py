@@ -1298,9 +1298,9 @@ class SwathParamsType:
             "required": True,
         }
     )
-    on_board_decimation_filter_params_list: Optional[
+    on_board_decimation_filter_params_list: None | (
         OnBoardDecimationFilterParamsListType
-    ] = field(
+    ) = field(
         default=None,
         metadata={
             "name": "onBoardDecimationFilterParamsList",
