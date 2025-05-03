@@ -5,9 +5,11 @@ import enum
 import pathlib
 import functools
 import importlib
+from xml.etree import ElementTree as etree
 
 from xsdata.exceptions import ParserError
 from xsdata.formats.dataclass.parsers import XmlParser
+from xsdata.formats.dataclass.parsers.handlers import XmlEventHandler
 
 _AUX_PRODUCT_RE = re.compile(
     r"(?P<mission_id>S1[ABCD_])_"
@@ -32,7 +34,7 @@ def _get_available_spec_versions():
 
     package_path = pathlib.Path(__file__).parent
     versions = [d.name for d in package_path.glob("v?_??") if d.is_dir()]
-    return sorted(versions, key=_key_func, reverse=True)
+    return tuple(sorted(versions, key=_key_func, reverse=True))
 
 
 class EProductType(enum.Enum):
@@ -61,8 +63,8 @@ def get_product_type(name: str) -> EProductType:
     return EProductType(mobj.group("product_type"))
 
 
-class ParseError(ParserError):
-    pass
+class S1AuxParseError(ParserError):
+    """Error in S1 AUX file parsing."""
 
 
 def load(path):
@@ -86,7 +88,27 @@ def load(path):
             "not implemented"
         ) from None
 
-    for version in _get_available_spec_versions():
+    spec_versions = list(_get_available_spec_versions())
+
+    try:
+        xmldoc = etree.parse(path)
+    except etree.ParseError:
+        raise S1AuxParseError(f"unable to parse: '{path}'")
+
+    root = xmldoc.getroot()
+    assert root.tag.lower() == xml_type_name.lower(), (
+        f"root.tag: {root.tag}, xml_type_name: {xml_type_name}"
+    )
+
+    if "schemaVersion" in root.attrib:
+        major, minor = root.attrib["schemaVersion"].split(".")
+        schema_version = f"v{major}_{minor:>02}"
+
+        if schema_version in spec_versions:
+            spec_versions.remove(schema_version)
+            spec_versions.insert(0, schema_version)
+
+    for version in spec_versions:
         modname = f".{version}.{product_type.name.lower()}"
         try:
             mod = importlib.import_module(modname, package="s1aux.parse")
@@ -94,10 +116,10 @@ def load(path):
         except ImportError:
             pass
         else:
-            parser = XmlParser()
+            parser = XmlParser(handler=XmlEventHandler)
             try:
-                return parser.parse(path, xml_obj_type)
+                return parser.parse(xmldoc, xml_obj_type)
             except (ParserError, TypeError):
                 pass
 
-    raise ParseError(f"Unable to load '{path}'")
+    raise S1AuxParseError(f"Unable to load '{path}'")

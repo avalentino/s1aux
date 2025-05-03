@@ -10,7 +10,7 @@ DATADIR = pathlib.Path(__file__).parent / "data"
 
 
 def test__get_available_spec_versions():
-    expected = [
+    expected = (
         "v3_12",
         "v3_09",
         "v3_08",
@@ -19,7 +19,7 @@ def test__get_available_spec_versions():
         "v2_10",
         "v1_06",
         "v1_05",
-    ]
+    )
     data = s1aux.parse._get_available_spec_versions()
     assert data == expected
 
@@ -161,5 +161,5 @@ def test_load__file_not_found_error(path):
 def test_load__parse_error(path, tmp_path):
     fullpath = tmp_path / path
     fullpath.touch()
-    with pytest.raises(s1aux.parse.ParseError):
+    with pytest.raises(s1aux.parse.S1AuxParseError):
         s1aux.parse.load(fullpath)
