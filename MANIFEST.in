@@ -1,3 +1,5 @@
-include Makefile .flake8
-include tools/*.py tools/.xsdata.xml
-recursive-include tests/data *.safe *.xsd *.xml
+include NEWS.rst Makefile .flake8 requirements-test.txt tox.ini
+include tools/.xsdata.xml
+recursive-include tools *.py
+recursive-include tests *.py
+recursive-include tests/data *.safe *.xsd *.xml *.txt

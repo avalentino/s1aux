@@ -8,7 +8,7 @@ name = "s1aux"
 authors = [
     {name = "Antonio Valentino", email = "antonio.valentino@tiscali.it"},
 ]
-description = "Tools and utilities for Sentinel-1 auxiliary products."
+description = "Sentinel-1 auxiliary (AUX) products reader."
 readme = {file = "README.rst", content-type = "text/x-rst"}
 requires-python = ">=3.10"
 keywords = ["satellite", "sentinel-1", "esa", "sar", "sar-mpc"]
@@ -33,13 +33,13 @@ dynamic = ["version"]
 Homepage = "https://github.com/avalentino/s1aux"
 Documentation = "https://github.com/avalentino/s1aux/blob/main/README.rst"
 Repository = "https://github.com/avalentino/s1aux.git"
-# Changelog = "https://github.com/avalentino/s1aux/blob/main/NEWS.rst"
+Changelog = "https://github.com/avalentino/s1aux/blob/main/NEWS.rst"
 Issues = "https://github.com/avalentino/s1aux/issues"
 
 
 [tool.setuptools.packages.find]
 namespaces = false
-exclude = ["tests"]
+exclude = ["tests", "tools"]
 
 
 [tool.setuptools.dynamic]
@@ -70,7 +70,6 @@ line_length = 79
 # force_grid_wrap = 0
 # ensure_newline_before_comments = true
 known_first_party = ["s1aux"]
-skip_glob = ["s1aux/*"]
 
 
 [tool.pydocstyle]
