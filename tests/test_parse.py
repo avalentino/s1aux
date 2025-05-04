@@ -159,8 +159,14 @@ def test_load__file_not_found_error(path):
 @pytest.mark.parametrize(
     "path", ["S1B_AUX_PP1_V20160422T000000_G20240423T074411.SAFE"]
 )
-def test_load__parse_error(path, tmp_path):
+def test_load__parse_error_01(path, tmp_path):
     fullpath = tmp_path / path
     fullpath.touch()
+    with pytest.raises(s1aux.S1AuxParseError):
+        s1aux.load(fullpath)
+
+
+def test_load__parse_error_02():
+    fullpath = DATADIR / "dummy" / "s1b-aux-pp1.xml"
     with pytest.raises(s1aux.S1AuxParseError):
         s1aux.load(fullpath)

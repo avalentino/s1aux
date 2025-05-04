@@ -1,7 +1,7 @@
-Files: tests/data/*
-Copyright: 2022 European Union
-License: copernicus-data
- Contains modified Copernicus Sentinel data 2022
+Files: tests/data/v*
+Copyright: 2014-2024 European Commission
+License: sentinel-data-legal-notice
+ Copernicus Sentinel data 2014-2024
  .
  Legal notice on the use of Copernicus Sentinel Data and Service Information
  The access and use of Copernicus Sentinel Data and Service Information is
