@@ -1,4 +1,4 @@
-"""Tools and utilities for the management of Sentinel-1 auxiliary products."""
+"""Reader for Sentinel-1 auxiliary (AUX) products."""
 
 from ._core import (  # noqa: F401
     load,
@@ -7,4 +7,4 @@ from ._core import (  # noqa: F401
     S1AuxParseError,
 )
 
-__version__ = "0.2.dev0"
+__version__ = "0.9.dev0"
