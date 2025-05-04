@@ -105,7 +105,14 @@ def _get_spec_versions(schema_version: str | None) -> Sequence[str]:
 
 
 def load(path: os.PathLike[str] | str):
-    """Load the Sentinel-1 Auxiliary (AUX) file specified in input."""
+    """Load the Sentinel-1 Auxiliary (AUX) file specified in input.
+
+    The input `path` parameter is expected to be the path to the data
+    file in the auxiliary product. E.g.::
+
+      S1A_AUX_INS_V20190228T092500_G20211103T111906.SAFE/data/s1a-aux-ins.xml
+
+    """
     path = pathlib.Path(path)
     product_type = get_product_type(path.name)
     xml_type_name = _get_type_name(product_type)
