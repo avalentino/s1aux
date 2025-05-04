@@ -7,4 +7,4 @@ from ._core import (  # noqa: F401
     S1AuxParseError,
 )
 
-__version__ = "0.9"
+__version__ = "0.9.1.dev0"
