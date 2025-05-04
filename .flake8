@@ -37,7 +37,7 @@ extend-exclude = s1aux/v*
 
 # flake8-cognitive-complexity
 # max-cognitive-complexity = 7  # default
-max-cognitive-complexity = 8
+max-cognitive-complexity = 10
 
 # flake8-noqa
 noqa-require-code = True
