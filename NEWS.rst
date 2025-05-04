@@ -1,7 +1,7 @@
 s1aux release notes
 ===================
 
-s1aux v0.9 (UNRELEASED)
+s1aux v0.9 (04/05/2025)
 -----------------------
 
 * Initial release.
