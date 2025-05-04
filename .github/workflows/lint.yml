@@ -53,7 +53,7 @@ jobs:
       - name: Lint (mypy)
         run: |
           python -m mypy --version
-          python -m mypy ${PACKAGE} tools tests
+          python -m mypy --check-untyped-defs --ignore-missing-imports ${PACKAGE} tools tests
 
       - name: Lint (ruff)
         run: |

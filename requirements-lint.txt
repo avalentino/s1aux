@@ -1,0 +1,8 @@
+flake8
+pydocstyle
+isort
+black
+mypy
+ruff
+types-requests
+types-tqdm
